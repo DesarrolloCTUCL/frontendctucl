@@ -9,7 +9,6 @@ const [showPassword, setShowPassword] = useState(false)
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    // Handle login logic here
     console.log("Login attempted with:", { email, password })
   }
 
