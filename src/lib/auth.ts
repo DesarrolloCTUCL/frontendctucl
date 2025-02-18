@@ -1,23 +1,38 @@
+import { userAuht } from "@/types/user.types";
 import axios from "axios";
-import Cookies from "js-cookie"; // Librería para manejar cookies en el navegador
+import Cookies from "js-cookie";
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
-
-export async function userAuth() {
+export async function userAuthLogin(user:userAuht) {
   try {
-    // Obtener el token de la cookie
-    const token = Cookies.get("token");
-
-    if (!token) {
-      throw new Error("No se encontró el token en las cookies.");
-    }
-
-    // Configuración de la petición
     const response = await axios.post(
       `${API_URL}/api/auth/login`,
       {
-        username: "johndoe",
-        password: "securepassword123",
+        email:user.email,
+        password:user.password,
+        username:user.username
+      },
+    );
+
+    return response.data;
+  } catch (error) {
+    console.error("Error en userAuth:", error);
+    throw error;
+  }
+}
+
+export async function getChargingPoints(user:userAuht) {
+  try {
+
+    const token = Cookies.get("token");
+    if (!token) {
+      throw new Error("No se encontró el token en las cookies.");
+    }
+    const response = await axios.post(
+      `${API_URL}/api/auth/login`,
+      {
+        username:user.username,
+        password:user.password
       },
       {
         headers: {
