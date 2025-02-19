@@ -3,23 +3,26 @@ import axios from "axios";
 import Cookies from "js-cookie";
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000";
 
-export async function userAuthLogin(user:userAuht) {
+export async function userAuthLogin(user: userAuht) {
   try {
     const response = await axios.post(
       `${API_URL}/api/auth/login`,
       {
-        email:user.email,
-        password:user.password,
-        username:user.username
+        email: user.email,
+        password: user.password,
+        username: user.username,
       },
+      {
+        withCredentials: true, // 👈 Permite enviar y recibir cookies
+      }
     );
 
     return response.data;
   } catch (error) {
-    console.error("Error en userAuth:", error);
     throw error;
   }
 }
+
 
 export async function getChargingPoints(user:userAuht) {
   try {
