@@ -6,6 +6,7 @@ export function middleware(req: NextRequest) {
   if (!token) {
     return NextResponse.redirect(new URL("/login", req.url)); // Redirigir si no está autenticado
   }
+  
 
   return NextResponse.next(); // Permitir acceso si hay token
 }
