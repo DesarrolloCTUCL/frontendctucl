@@ -2,19 +2,23 @@
 import { useSessionStore } from "@/store/session";
 import * as React from "react"
 import Link from "next/link"
+import { Bot } from "lucide-react";
 import { usePathname } from "next/navigation"
 import {
-	FolderIcon,
 	HomeIcon,
-	UsersIcon,
 	Cog6ToothIcon,
+	MapPinIcon,
 } from "@heroicons/react/24/outline"
+
 import { Avatar, AvatarImage, AvatarFallback } from "./ui/avatar"
 
+// const navigation = [
+// 	{ name: "Dashboard", href: "/dashboard", icon: HomeIcon, active: true },
+// 	{ name: "Puntos de Control", href: "/dashboard/charging_points", icon: MapPinIcon, active: false },
+// 	{ name: "Paradas", href: "/dashboard/bus_stop", icon: Bot, active: false },
+// ]
 const navigation = [
-	{ name: "Dashboard", href: "/dashboard", icon: HomeIcon, active: true },
-	{ name: "Puntos de Control", href: "/dashboard/charging_points", icon: UsersIcon, active: false },
-	{ name: "Paradas", href: "/dashboard/bus_stop", icon: FolderIcon, active: false },
+	{ name: "Paradas Automatizadas", href: "/dashboard/bus_stop", icon: Bot, active: false },
 ]
 
 export default function Sidebar() {

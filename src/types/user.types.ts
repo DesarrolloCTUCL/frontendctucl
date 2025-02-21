@@ -23,3 +23,19 @@ export interface SessionState {
   otherData: any; // Para almacenar otros datos de peticiones
   setOtherData: (data: any) => void;
 }
+
+export type Payment = {
+  id: string
+  amount: number
+  status: "pending" | "processing" | "success" | "failed"
+  email: string
+}
+
+export interface MqttData{
+  id: string,
+  name: string,
+  lastname: string,
+  command: string,
+  date:string,
+  hour:string
+}
