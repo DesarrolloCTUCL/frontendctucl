@@ -14,7 +14,7 @@ export interface LocalUser{
     email:string,
     username:string,
     uuid:string,
-    id:string
+    id:number
 }
 export interface SessionState {
   user: LocalUser | null;
@@ -24,12 +24,6 @@ export interface SessionState {
   setOtherData: (data: any) => void;
 }
 
-export type Payment = {
-  id: string
-  amount: number
-  status: "pending" | "processing" | "success" | "failed"
-  email: string
-}
 
 export interface MqttData{
   id: string,
@@ -37,5 +31,5 @@ export interface MqttData{
   lastname: string,
   command: string,
   date:string,
-  hour:string
+  time:string
 }

@@ -1,36 +1,90 @@
+"use client"
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select"
 import { Button } from "@/components/ui/button";
 import { Cog, Volume2 } from "lucide-react"
 import { Label } from "@/components/ui/label";
 import { ColumnDef } from "@tanstack/react-table";
-import { MqttData } from "@/types/user.types";
-   
-export const columns: ColumnDef<MqttData>[] = [
-	{
-	  accessorKey: "name",
-	  header: "Nombre",
-	},
-	{
-	  accessorKey: "lastname",
-	  header: "Apellido",
-	},
-	{
-		accessorKey: "command",
-		header: "Commando",
-	},
-	{
-		accessorKey: "date",
-		header: "Fecha",
-	},
-	{
-		accessorKey:"hour",
-		header:"Hora"
 
-	}
-  ]
+import { useSessionStore } from "@/store/session";
+import React, { useState, useEffect } from "react";
+import { toast } from "sonner"
 import { DataTable } from "@/components/mqtt-table";
+import { MqttApiQuery } from "@/types/services.types";
+import { MqttQuery,GetMqttHistory } from "@/services/MqttCommands";
+import MqttButton from "@/components/mqtt-button";
+import { MqttData } from "@/types/user.types";
 export default function BusStop() {
+    const user = useSessionStore((state) => state.user);
+    const [mqttHistory, setMqttHistory] = useState<MqttData[]>([]);
+    const [mqttTopic,setMqttTopic] = useState("");
+    const [deviceOn,setDeviceOn] = useState(false);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState("");
+    const MqttCommand =async(command:string,path:string)=>{
+        const now = new Date();
+        const fecha = now.toISOString().split('T')[0]; // Obtiene la fecha en formato YYYY-MM-DD
+        const hora = now.toTimeString().split(' ')[0];
+        const mqtt_data:MqttApiQuery = {
+            user_id:user?.id||0,
+            name: user?.name||"none",
+            lastname:user?.lastname||"none",
+            email:user?.email||"none",
+            command:command,
+            username:user?.username||"none",
+            path:path,
+            topic:mqttTopic === "" ? "desarrollo/commands" : mqttTopic
+        }
+        try {
+           
+            
+            await MqttQuery(mqtt_data);
+            const new_data:any = { ...mqtt_data, date:fecha, time:hora };
+            setMqttHistory(prevHistory => [new_data, ...prevHistory]);
+            
+        } catch (error) {
+            
+        }
+       
+       
 
+    }
+    const handleChange = (value: string) => {
+        setMqttTopic(value);
+      };
+    const connectDevice =()=>{
+        if(mqttTopic!= ""){
+            if(deviceOn){
+                setDeviceOn(false);
+            }else{
+                setDeviceOn(true);
+                toast("Event has been created", {
+                    description: "Sunday, December 03, 2023 at 9:00 AM",
+                    action: {
+                      label: "Undo",
+                      onClick: () => console.log("Undo"),
+                    },
+                  })
+            }
+        }else{
+            setDeviceOn(false);
+        }
+    }
+    useEffect(() => {
+        // Llamar a GetMqttHistory cuando el componente se monte
+        const fetchData = async () => {
+          try {
+            const data = await GetMqttHistory();
+            setMqttHistory(data.data); // Guardar los datos en el estado
+          } catch (err) {
+            setError("Hubo un error al obtener el historial MQTT");
+            console.error("Error al obtener el historial MQTT:", err);
+          } finally {
+            setLoading(false); // Dejar de cargar después de la respuesta
+          }
+        };
+    
+        fetchData();
+      }, []);
 
     return (
         <>
@@ -40,25 +94,25 @@ export default function BusStop() {
             <div className=" mx-auto p-6 bg-slate-50 shadow-lg rounded-lg">
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                     <div className="rounded-lg flex items-center justify-center md:col-span-2">
-                        <Select defaultValue="coliseo">
-                            <SelectTrigger className="w-full">
-                                <SelectValue placeholder="Selecciona la parada Automatizada" />
-                            </SelectTrigger>
-                            <SelectContent>
-                                <SelectItem value="coliseo">Coliseo SN</SelectItem>
-                                <SelectItem value="paltas_sn">Paltas SN</SelectItem>
-                                <SelectItem value="valle_sn">Valle SN</SelectItem>
-                                <SelectItem value="valle_ns">Valle NS</SelectItem>
-                                <SelectItem value="jipiro_sn">JIPIRO SN</SelectItem>
-                                <SelectItem value="jipiro_ns">JIPIRO NS</SelectItem>
-                            </SelectContent>
-                        </Select>
+                    <Select value={mqttTopic} disabled={deviceOn} onValueChange={handleChange}>
+                        <SelectTrigger className="w-full">
+                        <SelectValue placeholder="Selecciona la parada Automatizada" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectItem value="desarrollo/commands">Consorcio Pruebas</SelectItem>
+                            <SelectItem value="coliseo/commands">Coliseo SN</SelectItem>
+                            <SelectItem value="paltas_sn/commands">Paltas SN</SelectItem>
+                            <SelectItem value="jipiro_sn/commands">JIPIRO SN</SelectItem>
+                            <SelectItem value="jipiro_ns/commands">JIPIRO NS</SelectItem>
+                        </SelectContent>
+                    </Select>
                     </div>
                     <div className=" text-white p-6 rounded-lg flex items-center justify-start">
 
-                        <Button>
-                            CONECTAR
+                        <Button onClick={connectDevice}  >
+                            {deviceOn?"DESCONECTARSE":"CONECTARSE"}
                         </Button>
+                        
                     </div>
                     <div className=" text-black p-6 rounded-lg flex items-center justify-center"></div>
                     <div className=" rounded-lg flex items-center col-span-4 justify-start">
@@ -73,22 +127,22 @@ export default function BusStop() {
 
                     </div>
                     <div className=" text-white rounded-lg flex items-center justify-center">
-                        <button className="w-full inline-flex items-center gap-2 rounded-md bg-gray-900 px-6 py-2.5 text-sm font-medium text-white shadow-sm transition-colors hover:bg-gray-800 active:bg-gray-950 active:text-gray-200">
+                        <MqttButton deviceOn={deviceOn} onClick={()=>{MqttCommand("warning_sound","audio")}} >
                                 <Volume2 className="h-4 w-4" />
                             <span>Advertencia</span>
-                        </button>
+                        </MqttButton>
                     </div>
                     <div className=" text-white rounded-lg flex items-center justify-center">
-                        <button className="w-full inline-flex items-center gap-2 rounded-md bg-gray-900 px-6 py-2.5 text-sm font-medium text-white shadow-sm transition-colors hover:bg-gray-800 active:bg-gray-950 active:text-gray-200">
+                    <MqttButton deviceOn={deviceOn} onClick={()=>{MqttCommand("ctucl_slogan","audio")}} >
                                 <Volume2 className="h-4 w-4" />
                             <span>Lema</span>
-                        </button>
+                        </MqttButton>
                     </div>
                     <div className=" text-white rounded-lg flex items-center justify-center">
-                        <button className="w-full inline-flex items-center gap-2 rounded-md bg-gray-900 px-6 py-2.5 text-sm font-medium text-white shadow-sm transition-colors hover:bg-gray-800 active:bg-gray-950 active:text-gray-200">
+                    <MqttButton deviceOn={deviceOn} onClick={()=>{MqttCommand("patience_sound","audio")}} >
                                 <Volume2 className="h-4 w-4" />
                             <span>Indicaciones</span>
-                        </button>
+                        </MqttButton>
                     </div>
                     <div className=" rounded-lg flex items-center col-span-4 justify-start">
                         <Label>
@@ -96,37 +150,37 @@ export default function BusStop() {
                         </Label>
                     </div>
                     <div className=" text-black rounded-lg flex items-center justify-center">
-                        <button className="w-full  inline-flex items-center gap-2 rounded-md bg-blue-600 px-6 py-2.5 text-sm font-medium text-white shadow-sm transition-colors hover:bg-blue-700 active:bg-blue-800 active:text-blue-100">
+                    <MqttButton deviceOn={deviceOn} onClick={()=>{MqttCommand("generate_normal_pass","mecanism")}} activeColor="active:bg-blue-800"  hoverColor="hover:bg-blue-700" bgColor="bg-blue-600">
                                 <Cog className="h-4 w-4" />
                             <span>Generar Pase</span>
-                        </button>
+       
+                        </MqttButton>
                     </div>
                     <div className=" text-black rounded-lg flex items-center justify-center">
-                        <button className="w-full  inline-flex items-center gap-2 rounded-md bg-blue-600 px-6 py-2.5 text-sm font-medium text-white shadow-sm transition-colors hover:bg-blue-700 active:bg-blue-800 active:text-blue-100">
+                        <MqttButton deviceOn={deviceOn} onClick={()=>{MqttCommand("generate_special_pass","mecanism")}} activeColor="active:bg-blue-800"  hoverColor="hover:bg-blue-700" bgColor="bg-blue-600">
                                 <Cog className="h-4 w-4" />
                             <span>Generar Pase Especial</span>
-                        </button>
+                        </MqttButton>
                     </div>
                     <div className=" text-black rounded-lg flex items-center justify-center">
-                        <button className="w-full  inline-flex items-center gap-2 rounded-md bg-blue-600 px-6 py-2.5 text-sm font-medium text-white shadow-sm transition-colors hover:bg-blue-700 active:bg-blue-800 active:text-blue-100">
+                        <MqttButton deviceOn={deviceOn} onClick={()=>{MqttCommand("test_lock","mecanism")}} activeColor="active:bg-blue-800"  hoverColor="hover:bg-blue-700" bgColor="bg-blue-600">
                                 <Cog className="h-4 w-4" />
                             <span>Testear Cerradura</span>
-                        </button>
+                        </MqttButton>
                     </div>
                     <div className=" text-black rounded-lg flex items-center justify-center">
-                        <button className="w-full  inline-flex items-center gap-2 rounded-md bg-blue-600 px-6 py-2.5 text-sm font-medium text-white shadow-sm transition-colors hover:bg-blue-700 active:bg-blue-800 active:text-blue-100">
-                                <Cog className="h-4 w-4" />
+                    <MqttButton deviceOn={deviceOn} onClick={()=>{MqttCommand("test_arrow","mecanism")}} activeColor="active:bg-blue-800"  hoverColor="hover:bg-blue-700" bgColor="bg-blue-600">
                             <span>Testear Flecha</span>
-                        </button>
+                        </MqttButton>
                         
                     </div>
                     <div className=" text-black rounded-lg flex items-center justify-center">
-                        <button className="w-full  inline-flex items-center gap-2 rounded-md bg-blue-600 px-6 py-2.5 text-sm font-medium text-white shadow-sm transition-colors hover:bg-blue-700 active:bg-blue-800 active:text-blue-100">
+                    <MqttButton deviceOn={deviceOn} onClick={()=>{MqttCommand("actuador_off","mecanism")}} activeColor="active:bg-blue-800"  hoverColor="hover:bg-blue-700" bgColor="bg-blue-600">                               
                                 <Cog className="h-4 w-4" />
                             <span>Apagar Actuador</span>
-                        </button>
+                        </MqttButton>
                     </div>
-                    <div className=" rounded-lg flex items-center col-span-4 justify-start">
+                    {/* <div className=" rounded-lg flex items-center col-span-4 justify-start">
                         <Label>
                             Eventos
                         </Label>
@@ -136,9 +190,9 @@ export default function BusStop() {
                             <Cog className="h-4 w-4" />
                             <span>Modo Mantenimiento</span>
                         </button>
-                    </div>
+                    </div> */}
                     <div className=" rounded-lg flex items-center col-span-4 justify-start">
-                            <DataTable columns={columns}  data={test_data} />
+                            <DataTable columns={columns}  data={mqttHistory} />
                     </div>
                 </div>
             </div>
@@ -147,13 +201,32 @@ export default function BusStop() {
 
 }
 
-const test_data:MqttData[] =  [
-	{name:"jhon",lastname:'doe',command:"/generar_pase",date:"2-21-2025",id:"",hour:"12:35:00"},
-	{name:"jhon",lastname:'doe',command:"/generar_pase",date:"2-21-2025",id:"",hour:"12:35:00"},
-	{name:"jhon",lastname:'doe',command:"/generar_pase",date:"2-21-2025",id:"",hour:"12:35:00"},
-	{name:"jhon",lastname:'doe',command:"/generar_pase",date:"2-21-2025",id:"",hour:"12:35:00"},
-	{name:"jhon",lastname:'doe',command:"/generar_pase",date:"2-21-2025",id:"",hour:"12:35:00"},
-	{name:"jhon",lastname:'doe',command:"/generar_pase",date:"2-21-2025",id:"",hour:"12:35:00"},
-	{name:"jhon",lastname:'doe',command:"/generar_pase",date:"2-21-2025",id:"",hour:"12:35:00"},
-	{name:"jhon",lastname:'doe',command:"/generar_pase",date:"2-21-2025",id:"",hour:"12:35:00"}
-]
+
+
+export const columns: ColumnDef<MqttData>[] = [
+	{
+	  accessorKey: "name",
+	  header: "Nombre",
+	},
+	{
+	  accessorKey: "lastname",
+	  header: "Apellido",
+	},
+	{
+		accessorKey: "command",
+		header: "Commando",
+	},
+    {
+		accessorKey: "topic",
+		header: "Topico",
+	},
+	{
+		accessorKey: "date",
+		header: "Fecha",
+	},
+	{
+		accessorKey:"time",
+		header:"Hora"
+
+	}
+  ]

@@ -5,6 +5,7 @@ import {
     flexRender,
     getCoreRowModel,
     useReactTable,
+    getPaginationRowModel, // Necesario para la paginación
 } from "@tanstack/react-table";
 import { Button } from "./ui/button";
 import {
@@ -21,7 +22,6 @@ interface DataTableProps<TData, TValue> {
     data: TData[]
 }
 
-
 export function DataTable<TData, TValue>({
     columns,
     data,
@@ -30,12 +30,13 @@ export function DataTable<TData, TValue>({
         data,
         columns,
         getCoreRowModel: getCoreRowModel(),
+        getPaginationRowModel: getPaginationRowModel(),
     })
 
     return (
         <>
-        <div className="flex w-full flex-col  py-4">
-            <div className="rounded-md border ">
+        <div className="flex w-full flex-col py-4">
+            <div className="rounded-md border">
                 <Table>
                     <TableHeader>
                         {table.getHeaderGroups().map((headerGroup) => (
@@ -55,7 +56,9 @@ export function DataTable<TData, TValue>({
                             </TableRow>
                         ))}
                     </TableHeader>
-                    <TableBody>
+
+                    {/* Cuerpo de la tabla con scroll si es necesario */}
+                    <TableBody className="max-h-60 overflow-y-auto">
                         {table.getRowModel().rows?.length ? (
                             table.getRowModel().rows.map((row) => (
                                 <TableRow
@@ -79,31 +82,30 @@ export function DataTable<TData, TValue>({
                     </TableBody>
                 </Table>
             </div>
-                <div className="flex items-center justify-end space-x-2 py-4">
-                    <div className="flex-1 text-sm text-muted-foreground">
-                        {table.getFilteredSelectedRowModel().rows.length} of{" "}
-                        {table.getFilteredRowModel().rows.length} row(s) selected.
-                    </div>
-                    <div className="space-x-2">
-                        <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={() => table.previousPage()}
-                            disabled={!table.getCanPreviousPage()}
-                        >
-                            Previous
-                        </Button>
-                        <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={() => table.nextPage()}
-                            disabled={!table.getCanNextPage()}
-                        >
-                            Next
-                        </Button>
-                    </div>
+            <div className="flex items-center justify-end space-x-2 py-4">
+                <div className="space-x-2">
+                    <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => table.previousPage()}
+                        disabled={!table.getCanPreviousPage()}
+                    >
+                        Previous
+                    </Button>
+                    <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => table.nextPage()}
+                        disabled={!table.getCanNextPage()}
+                    >
+                        Next
+                    </Button>
                 </div>
+                <span>
+                    Page {table.getState().pagination.pageIndex + 1} of {table.getPageCount()}
+                </span>
             </div>
+        </div>
         </>
     )
 }

@@ -14,6 +14,7 @@ export default function Layout({
           <main className="lg:pl-64">
             <div className="px-4 py-4 sm:px-6 lg:px-8">{children}</div>
           </main>
+          
         </div>
       </body>
     </html>

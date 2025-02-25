@@ -13,7 +13,7 @@ export async function userAuthLogin(user: userAuht) {
         username: user.username,
       },
       {
-        withCredentials: true, // 👈 Permite enviar y recibir cookies
+        withCredentials: true,
       }
     );
 
