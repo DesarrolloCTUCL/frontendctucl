@@ -21,8 +21,8 @@ const [showPassword, setShowPassword] = useState(false)
       console.log("Usuario autenticado:", userData);
       setUser(userData.data)
  
-    } catch (error: any) {
-      alert(error.response.data.message);
+    } catch (error) {
+      console.log(error)
     }
   }
 

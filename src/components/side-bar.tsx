@@ -5,9 +5,7 @@ import Link from "next/link"
 import { Bot } from "lucide-react";
 import { usePathname } from "next/navigation"
 import {
-	HomeIcon,
 	Cog6ToothIcon,
-	MapPinIcon,
 } from "@heroicons/react/24/outline"
 
 import { Avatar, AvatarImage, AvatarFallback } from "./ui/avatar"

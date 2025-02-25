@@ -18,8 +18,6 @@ export default function BusStop() {
     const [mqttHistory, setMqttHistory] = useState<MqttData[]>([]);
     const [mqttTopic,setMqttTopic] = useState("");
     const [deviceOn,setDeviceOn] = useState(false);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState("");
     const MqttCommand =async(command:string,path:string)=>{
         const now = new Date();
         const fecha = now.toISOString().split('T')[0]; // Obtiene la fecha en formato YYYY-MM-DD
@@ -35,14 +33,12 @@ export default function BusStop() {
             topic:mqttTopic === "" ? "desarrollo/commands" : mqttTopic
         }
         try {
-           
-            
             await MqttQuery(mqtt_data);
             const new_data:any = { ...mqtt_data, date:fecha, time:hora };
             setMqttHistory(prevHistory => [new_data, ...prevHistory]);
             
         } catch (error) {
-            
+            console.log(error)
         }
        
        
@@ -76,11 +72,9 @@ export default function BusStop() {
             const data = await GetMqttHistory();
             setMqttHistory(data.data); // Guardar los datos en el estado
           } catch (err) {
-            setError("Hubo un error al obtener el historial MQTT");
+           
             console.error("Error al obtener el historial MQTT:", err);
-          } finally {
-            setLoading(false); // Dejar de cargar después de la respuesta
-          }
+          } 
         };
     
         fetchData();
