@@ -8,3 +8,13 @@ export interface MqttApiQuery{
     path:string,
     topic:string
 }
+
+export interface MqttData{
+    id: string,
+    name: string,
+    lastname: string,
+    command: string,
+    topic:string,
+    date:string,
+    time:string
+  }

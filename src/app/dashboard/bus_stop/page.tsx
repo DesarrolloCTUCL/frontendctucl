@@ -1,4 +1,6 @@
 "use client"
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select"
 import { Button } from "@/components/ui/button";
 import { Cog, Volume2 } from "lucide-react"
@@ -9,10 +11,10 @@ import { useSessionStore } from "@/store/session";
 import React, { useState, useEffect } from "react";
 import { toast } from "sonner"
 import { DataTable } from "@/components/mqtt-table";
-import { MqttApiQuery } from "@/types/services.types";
+import { MqttApiQuery, MqttData } from "@/types/services.types";
 import { MqttQuery,GetMqttHistory } from "@/services/MqttCommands";
 import MqttButton from "@/components/mqtt-button";
-import { MqttData } from "@/types/user.types";
+
 export default function BusStop() {
     const user = useSessionStore((state) => state.user);
     const [mqttHistory, setMqttHistory] = useState<MqttData[]>([]);
@@ -197,7 +199,7 @@ export default function BusStop() {
 
 
 
-export const columns: ColumnDef<MqttData>[] = [
+ const columns: ColumnDef<MqttData>[] = [
 	{
 	  accessorKey: "name",
 	  header: "Nombre",
