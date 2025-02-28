@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Cog, Volume2 } from "lucide-react"
 import { Label } from "@/components/ui/label";
 import { ColumnDef } from "@tanstack/react-table";
-
+import Swal from 'sweetalert2';
 import { useSessionStore } from "@/store/session";
 import React, { useState, useEffect } from "react";
 import { toast } from "sonner"
@@ -34,6 +34,10 @@ export default function BusStop() {
             path:path,
             topic:mqttTopic === "" ? "desarrollo/commands" : mqttTopic
         }
+        Swal.fire({
+            title: "Comando Enviado Con Exito",
+            icon: "success"
+          });
         try {
             await MqttQuery(mqtt_data);
             const new_data:any = { ...mqtt_data, date:fecha, time:hora };
@@ -41,6 +45,11 @@ export default function BusStop() {
             
         } catch (error) {
             console.log(error)
+            Swal.fire({
+                title: "Algo Paso",
+                text:error,
+                icon: "error"
+              });
         }
        
        
