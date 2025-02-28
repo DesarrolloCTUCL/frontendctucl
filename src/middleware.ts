@@ -1,22 +1,20 @@
-import { NextResponse } from "next/server";
-import type { NextRequest } from "next/server";
+import { NextRequest, NextResponse } from 'next/server';
+import { cookies } from 'next/headers';
 
-export function middleware(req: NextRequest) {
-    const token = req.cookies.get('token')?.value;
+export async function middleware(req: NextRequest) {
+  const cookieStore = cookies();  // Obtener el acceso a las cookies
+  const token = (await cookieStore).get('auth_token');  // Obtener el token de la cookie
 
-    // Opción 2: Obtener el token del header `Authorization`
-    const authHeader = req.headers.get('Authorization');
-    const tokenFromHeader = authHeader?.split(' ')[1]; // Extraer el token de "Bearer <token>"
-    if (!token && !tokenFromHeader) {
-        console.log("No se pudo obtener el token");
-        return NextResponse.redirect(new URL("/login", req.url)); // Redirigir al login
-    }
+  if (!token) {
+    console.log("No se pudo obtener el token");
+    return NextResponse.redirect(new URL("/login", req.url));  // Redirigir al login si no se encuentra el token
+  }
 
-  return NextResponse.next(); // Permitir acceso si hay token
+  return NextResponse.next();  // Si el token existe, continuar con la solicitud
 }
 
-// Aplicar el middleware solo a ciertas rutas protegidas
+// Configurar el matcher para que se aplique a todas las rutas protegidas
 export const config = {
-  matcher: ["/dashboard/:path*", "/perfil/:path*"], // Agrega más rutas si necesitas
-  runtime: "nodejs",
+  matcher: ['/dashboard/:path*', '/perfil/:path*'],  // Rutas protegidas
+  runtime: 'nodejs',
 };

@@ -1,55 +1,44 @@
 import { userAuht } from "@/types/user.types";
 import axios from "axios";
-import Cookies from "js-cookie";
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000";
-
-export async function userAuthLogin(user: userAuht) {
-  try {
-    const response = await axios.post(
-      `${API_URL}/api/auth/login`,
-      {
-        email: user.email,
-        password: user.password,
-        username: user.username,
-      },
-      {
-        withCredentials: true,
-      }
-    );
-
-    return response.data;
-  } catch (error) {
-    throw error;
-  }
+import { auth } from "@/lib/firebase-config";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import Cookies from 'js-cookie';
+export async function userAuthLogin(userData: userAuht) {
+	try {
+		const userCredential = await signInWithEmailAndPassword(auth, userData.email,userData.password);
+		const user = userCredential.user;
+		if (user) {
+			const token = await user.getIdToken();
+			
+			const response = await axios.post(
+				`${API_URL}/api/auth/login`,
+				{
+					email: userData.email,
+					password: userData.password,
+					username: userData.username,
+					firebase_token:token
+				}
+			);
+			console.log("respuesta_api",response.data.result.localData);
+			storeTokenInCookie(token); 
+			return response.data.result.localData;
+		}
+	} catch (error) {
+		throw error;
+	}
 }
 
-
-export async function getChargingPoints(user:userAuht) {
-  try {
-
-    const token = Cookies.get("token");
-    if (!token) {
-      throw new Error("No se encontró el token en las cookies.");
-    }
-    const response = await axios.post(
-      `${API_URL}/api/auth/login`,
-      {
-        username:user.username,
-        password:user.password
-      },
-      {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`, // Enviar el token en el header
-        },
-        withCredentials: true, // Para asegurar que las cookies se envíen en la petición
-      }
-    );
-
-    console.log("Respuesta del servidor:", response.data);
-    return response.data;
-  } catch (error) {
-    console.error("Error en userAuth:", error);
-    throw error;
+export function storeTokenInCookie(token: string) {
+	const expirationDate = new Date();
+	expirationDate.setDate(expirationDate.getDate() + 7); // Expira en 7 días
+  
+	Cookies.set('auth_token', token, { expires: expirationDate, secure: true, sameSite: 'Strict' });
   }
+
+
+
+export function getTokenFromCookie() {
+  const token = Cookies.get('auth_token');
+  return token;
 }

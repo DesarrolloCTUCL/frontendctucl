@@ -6,20 +6,21 @@ import { Eye, EyeOff } from "lucide-react"
 import { userAuthLogin } from "@/lib/auth"
 import { userAuht } from "@/types/user.types"
 import { useSessionStore } from "@/store/session";
+
 export default function Home() {
 const [showPassword, setShowPassword] = useState(false)
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const router = useRouter();
-  const setUser = useSessionStore((state) => state.setUser); 
+  const setUser = useSessionStore((state) => state.setUser);
+
   const handleSubmit = async(e: React.FormEvent) => {
     e.preventDefault()
     const credentials: userAuht = {email:email,password:password}
     try {
       const userData = await userAuthLogin(credentials);
-      router.push("/dashboard");
-      console.log("Usuario autenticado:", userData);
-      setUser(userData.data)
+      setUser(userData)
+      router.push("/dashboard/")
  
     } catch (error) {
       console.log(error)
