@@ -3,7 +3,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select"
 import { Button } from "@/components/ui/button";
-import { Cog, Volume2 } from "lucide-react"
+import { Cog, Volume2,Flag } from "lucide-react"
 import { Label } from "@/components/ui/label";
 import { ColumnDef } from "@tanstack/react-table";
 import Swal from 'sweetalert2';
@@ -109,6 +109,8 @@ export default function BusStop() {
                             <SelectItem value="paltas_sn/commands">Paltas SN</SelectItem>
                             <SelectItem value="jipiro_sn/commands">JIPIRO SN</SelectItem>
                             <SelectItem value="jipiro_ns/commands">JIPIRO NS</SelectItem>
+                            <SelectItem value="valle_ns/commands">VALLE NS</SelectItem>
+                            <SelectItem value="valle_sn/commands">VALLE SN</SelectItem>
                         </SelectContent>
                     </Select>
                     </div>
@@ -185,17 +187,23 @@ export default function BusStop() {
                             <span>Apagar Actuador</span>
                         </MqttButton>
                     </div>
-                    {/* <div className=" rounded-lg flex items-center col-span-4 justify-start">
+                    <div className=" rounded-lg flex items-center col-span-4 justify-start">
                         <Label>
                             Eventos
                         </Label>
                     </div>
                     <div className=" text-black rounded-lg flex items-center justify-center">
-                    <button className="w-full inline-flex items-center gap-2 rounded-md bg-emerald-600 px-6 py-2.5 text-sm font-medium text-white shadow-sm transition-colors hover:bg-emerald-700 active:bg-emerald-800 active:text-emerald-100">
-                            <Cog className="h-4 w-4" />
+                    <MqttButton deviceOn={deviceOn} onClick={()=>{MqttCommand("maintenance","events")}} activeColor="active:bg-amber-800"  hoverColor="hover:bg-amber-700" bgColor="bg-amber-600">                               
+                                <Flag className="h-4 w-4" />
                             <span>Modo Mantenimiento</span>
-                        </button>
-                    </div> */}
+                        </MqttButton>
+                    </div>
+                    <div className=" text-black rounded-lg flex items-center justify-center">
+                    <MqttButton deviceOn={deviceOn} onClick={()=>{MqttCommand("restart","events")}} activeColor="active:bg-amber-800"  hoverColor="hover:bg-amber-700" bgColor="bg-amber-600">                               
+                                <Flag className="h-4 w-4" />
+                            <span>Reiniciar</span>
+                        </MqttButton>
+                    </div>
                     <div className=" rounded-lg flex items-center col-span-4 justify-start">
                             <DataTable columns={columns}  data={mqttHistory} />
                     </div>

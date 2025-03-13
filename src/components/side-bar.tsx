@@ -2,7 +2,7 @@
 import { useSessionStore } from "@/store/session";
 import * as React from "react"
 import Link from "next/link"
-import { Bot } from "lucide-react";
+import { Bot,User } from "lucide-react";
 import { usePathname } from "next/navigation"
 import {
 	Cog6ToothIcon,
@@ -17,6 +17,7 @@ import { Avatar, AvatarImage, AvatarFallback } from "./ui/avatar"
 // ]
 const navigation = [
 	{ name: "Paradas Automatizadas", href: "/dashboard/bus_stop", icon: Bot, active: false },
+	{ name: "Usuarios", href: "/dashboard/users", icon: User, active: false },
 ]
 
 export default function Sidebar() {
