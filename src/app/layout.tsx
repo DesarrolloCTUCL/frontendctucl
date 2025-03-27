@@ -31,7 +31,7 @@ export default function RootLayout({
 			>
 				<div className="flex flex-col min-h-screen">
 					<HeaderHome />
-						<main className="flex-1 p-4">{children}</main>
+						<main className="flex-1 p-4 bg-[url('/purple.jpg')] bg-cover bg-center">{children}</main>
 					<FooterHome />
 				</div>
 			</body>

@@ -5,8 +5,8 @@ export default function Home() {
 	return (
 				<section className="w-full   p-3">
 					<div className="px-4 md:px-6">
-						<h1 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl lg:text-6xl/none">
-							Sistema de Gestión de Flota de Buses
+						<h1 className="text-3xl text-white font-bold tracking-tighter sm:text-4xl md:text-5xl lg:text-6xl/none">
+							Sistema Integral de Monitoreo para el transporte Urbano
 						</h1>
 						<div className="grid gap-6 lg:grid-cols-2 lg:gap-12 xl:grid-cols-6">
 							<div className="col-span-4 flex flex-col justify-center space-y-4">

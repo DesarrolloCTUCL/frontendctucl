@@ -2,8 +2,8 @@ import { Bus, BarChart3, Clock, Shield, MapPin, Users } from "lucide-react"
 export default function FeaturesApp() {
 
 	return (
-		<div className="mx-auto  grid max-w-5xl grid-cols-1 gap-6 py-12 md:grid-cols-2 lg:grid-cols-3">
-			<div className="flex flex-col items-center space-y-2 rounded-lg border p-6">
+		<div className="mx-auto   grid max-w-5xl grid-cols-1 gap-6 py-12 md:grid-cols-2 lg:grid-cols-3">
+			<div className="flex flex-col bg-slate-50 items-center space-y-2 rounded-lg border p-6">
 				<div className="rounded-full bg-primary p-2 text-primary-foreground">
 					<BarChart3 className="h-6 w-6" />
 				</div>
@@ -12,7 +12,7 @@ export default function FeaturesApp() {
 					Monitoree el rendimiento de su flota con paneles de control intuitivos y reportes detallados.
 				</p>
 			</div>
-			<div className="flex flex-col items-center space-y-2 rounded-lg border p-6">
+			<div className="flex flex-col bg-slate-50 items-center space-y-2 rounded-lg border p-6">
 				<div className="rounded-full bg-primary p-2 text-primary-foreground">
 					<Clock className="h-6 w-6" />
 				</div>
@@ -21,7 +21,7 @@ export default function FeaturesApp() {
 					Optimice rutas y horarios para maximizar la eficiencia y reducir costos operativos.
 				</p>
 			</div>
-			<div className="flex flex-col items-center space-y-2 rounded-lg border p-6">
+			<div className="flex flex-col bg-slate-50 items-center space-y-2 rounded-lg border p-6">
 				<div className="rounded-full bg-primary p-2 text-primary-foreground">
 					<Shield className="h-6 w-6" />
 				</div>
@@ -30,7 +30,7 @@ export default function FeaturesApp() {
 					Programe y rastree el mantenimiento para prevenir averías y extender la vida útil de sus vehículos.
 				</p>
 			</div>
-			<div className="flex flex-col items-center space-y-2 rounded-lg border p-6">
+			<div className="flex flex-col bg-slate-50 items-center space-y-2 rounded-lg border p-6">
 				<div className="rounded-full bg-primary p-2 text-primary-foreground">
 					<MapPin className="h-6 w-6" />
 				</div>
@@ -39,7 +39,7 @@ export default function FeaturesApp() {
 					Localice sus vehículos en tiempo real y optimice rutas para mejorar la puntualidad.
 				</p>
 			</div>
-			<div className="flex flex-col items-center space-y-2 rounded-lg border p-6">
+			<div className="flex flex-col bg-slate-50 items-center space-y-2 rounded-lg border p-6">
 				<div className="rounded-full bg-primary p-2 text-primary-foreground">
 					<Users className="h-6 w-6" />
 				</div>
@@ -48,7 +48,7 @@ export default function FeaturesApp() {
 					Administre horarios, licencias y capacitación de conductores desde una plataforma centralizada.
 				</p>
 			</div>
-			<div className="flex flex-col items-center space-y-2 rounded-lg border p-6">
+			<div className="flex flex-col bg-slate-50 items-center space-y-2 rounded-lg border p-6">
 				<div className="rounded-full bg-primary p-2 text-primary-foreground">
 					<Bus className="h-6 w-6" />
 				</div>

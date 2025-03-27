@@ -111,6 +111,7 @@ export default function BusStop() {
                             <SelectItem value="jipiro_ns/commands">JIPIRO NS</SelectItem>
                             <SelectItem value="valle_ns/commands">VALLE NS</SelectItem>
                             <SelectItem value="valle_sn/commands">VALLE SN</SelectItem>
+                            <SelectItem value="podocarpus_sn/commands">PODOCARPUS SN</SelectItem>
                         </SelectContent>
                     </Select>
                     </div>
