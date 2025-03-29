@@ -36,10 +36,12 @@ export default function Home() {
 	}
 
 	return (
-		<div className="flex items-center justify-center bg-gradient-to-br  to-muted p-4">
-			<div className="w-full max-w-md">
+		<main className="w-full   items-center  flex-1  bg-[url('/purple.jpg')] bg-cover bg-center">
 
-				<Card className="border-border/50 shadow-lg">
+		<div className="flex items-center h-screen  justify-center bg-gradient-to-br  to-muted ">
+		
+
+				<Card className="border-border/50 shadow-lg w-96">
 					<CardHeader className="space-y-1">
 					<div className="text-center mb-8">
 					<h1 className="text-3xl font-bold tracking-tight text-primary">Simtra</h1>
@@ -136,7 +138,8 @@ export default function Home() {
 				</Card>
 
 			</div>
-		</div>
+
+		</main>
 	)
 }
 
