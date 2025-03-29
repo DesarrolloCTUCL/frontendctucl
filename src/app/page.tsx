@@ -5,9 +5,9 @@ import HeaderHome from "@/components/header-home";
 import FooterHome from "@/components/footer-home";
 export default function Home() {
 	return (
-		<main>
+		<main className="h-screen flex flex-col">
 			<HeaderHome/>
-				<section className="w-full    flex-1 p-4 bg-[url('/purple.jpg')] bg-cover bg-center">
+				<section className="w-full flex-1 p-4 bg-[url('/purple.jpg')] bg-cover bg-center">
 					<div className="px-4 md:px-6">
 						<h1 className="text-3xl text-white font-bold tracking-tighter sm:text-4xl md:text-5xl lg:text-6xl/none">
 							Sistema Integral de Monitoreo para el transporte Urbano
@@ -28,7 +28,7 @@ export default function Home() {
 						</div>
 					</div>
 				</section>
-					<FooterHome />
+			<FooterHome />
 		</main>
 	)
 }
