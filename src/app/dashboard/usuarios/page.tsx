@@ -13,54 +13,24 @@ import {
 } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import Link from 'next/link';
 export default function Users() {
 
 
     return (
         <>
             <div className="mx-auto p-6 bg-slate-50 shadow-lg rounded-lg">
-
                 <h1 className="font-semibold ">Opciones:</h1>
                 <div>
                     <Dialog>
-                        <DialogTrigger asChild>
+                        <Link href="/dashboard/usuarios/create">
                             <Button>
                                 Registrar Usuario
                             </Button>
-                        </DialogTrigger>
-                        <DialogContent className="sm:max-w-[425px]">
-                            <DialogHeader>
-                                <DialogTitle>Crear  Usuario</DialogTitle>
-                                <DialogDescription>
-                                    Hola
-                                </DialogDescription>
-                            </DialogHeader>
-                            <div className="grid gap-4 py-4">
-                                <div className="grid grid-cols-4 items-center gap-4">
-                                    <Label htmlFor="name" className="text-right">
-                                        Name
-                                    </Label>
-                                    <Input id="name" value="Pedro Duarte" className="col-span-3" />
-                                </div>
-                                <div className="grid grid-cols-4 items-center gap-4">
-                                    <Label htmlFor="username" className="text-right">
-                                        Username
-                                    </Label>
-                                    <Input id="username" value="@peduarte" className="col-span-3" />
-                                </div>
-                            </div>
-                            <DialogFooter>
-                                <Button type="submit">Save changes</Button>
-                            </DialogFooter>
-                        </DialogContent>
+                        </Link>
                     </Dialog>
                 </div>
             </div>
-
-
-
-
-
         </>
 
     )
