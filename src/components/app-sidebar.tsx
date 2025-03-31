@@ -2,7 +2,6 @@
 import * as React from "react"
 import {
 	Bot,
-	Home,
 	Users2,
 } from "lucide-react"
 
