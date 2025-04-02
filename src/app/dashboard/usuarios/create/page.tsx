@@ -21,8 +21,12 @@ const formSchema = z
         email: z.string().email({
             message: "Por favor ingresa un correo electrónico válido.",
         }),
-        phone: z.string(),
-        dni: z.string(),
+        phone: z.string().min(10, {
+            message: "El Telefono debe tener al menos 10 digitos.",
+        }),
+        dni: z.string().min(10, {
+            message: "El DNI debe tener al menos 10 digitos.",
+        }),
         username: z.string(),
     })
 
@@ -116,7 +120,7 @@ export default function RegistrationForm() {
                             name="phone"
                             render={({ field }) => (
                                 <FormItem className="w-full">
-                                    <FormLabel>Phone</FormLabel>
+                                    <FormLabel>Telefono</FormLabel>
                                     <FormControl>
                                         <Input type="text" placeholder="+593 000 000 0000" {...field} />
                                     </FormControl>
@@ -127,7 +131,7 @@ export default function RegistrationForm() {
 
                         <FormField
                             control={form.control}
-                            name="username"
+                            name="dni"
                             render={({ field }) => (
                                 <FormItem className="w-full">
                                     <FormLabel>Dni</FormLabel>

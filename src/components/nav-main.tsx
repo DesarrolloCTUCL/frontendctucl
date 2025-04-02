@@ -34,10 +34,10 @@ export function NavMain({
     <SidebarGroup>
       <SidebarMenu>
         <SidebarMenuButton asChild tooltip={"home"}>
-          <a href={'/dashboard'}>
+          <Link href={'/dashboard'}>
             <HomeIcon />
             <span>Inicio</span>
-          </a>
+          </Link>
         </SidebarMenuButton>
       </SidebarMenu>
 

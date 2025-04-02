@@ -30,8 +30,8 @@ export default function RootLayout({
 				<div className="flex flex-col h-screen">
 					{children}
 				</div>
-			</body>
 			<Toaster />
+			</body>
 		</html>
 	);
 }
