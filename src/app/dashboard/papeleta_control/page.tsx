@@ -1,3 +1,5 @@
+'use client'
+
 import dynamic from 'next/dynamic'
 
 const PapeletaControlClient = dynamic(() => import('./papeleta_control_client'), {
