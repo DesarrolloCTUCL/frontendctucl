@@ -33,6 +33,10 @@ const data = {
 				{
 					title: "Administradores",
 					url: "/dashboard/usuarios",
+				},
+				{
+					title: "Buses",
+					url: "/dashboard/buses",
 				}
 			],
 		},
@@ -44,11 +48,74 @@ const data = {
 			items: [
 				{
 					title: "Automatizadas",
+					url: "/dashboard/paradas_automatizadas",
+				},
+				{
+					title: "Generales",
 					url: "/dashboard/paradas",
-				}
+				},
+				{
+					title: "Puntos de control",
+					url: "/dashboard/pcontrol",
+				},
 			],
+		},
+
+		,
+		{
+			title: "Puntos de recarga",
+			url: "#",
+			icon: Bot,
+			isActive: false,
+			items: [
+				{
+					title: "Listado de recargadores",
+					url: "/dashboard/puntos_recarga",
+				},
+				{
+					title: "Mapa de recargadores",
+					url: "/dashboard/paradas",
+				},
+				{
+					title: "Agregar recargador",
+					url: "/dashboard/pcontrol",
+				},
+			],
+		},
+
+		{	title: "Control de flota",
+			url: "#",
+			icon: Bot,
+			isActive: false,
+			items: [
+				{
+					title: "Despacho general",
+					url: "/dashboard/despacho_general",
+				},
+				{
+					title: "Despacho por ruta",
+					url: "/dashboard/despacho_ruta",
+				},
+				{
+					title: "Despacho por bus",
+					url: "/dashboard/despacho_bus",
+				},
+				{
+					title: "Mapa buses",
+					url: "/dashboard/mapa_buses",
+				},
+				{
+					title: "Itinerarios",
+					url: "/dashboard/itinerarios",
+				},
+				{
+					title: "Asignación rutas",
+					url: "/dashboard/asignacion_rutas",
+				},
+			]
 		}
 	],
+
 }
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
