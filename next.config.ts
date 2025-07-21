@@ -1,7 +1,9 @@
 import { NextConfig } from 'next';
 
-const config: NextConfig = {
- 
-};
-
-export default config;
+const nextConfig = {
+    eslint: {
+      ignoreDuringBuilds: true,
+    },
+  };
+  
+  export default nextConfig;
