@@ -70,9 +70,9 @@ export default function Schedule_page() {
         const dateObj = new Date(row.date)
         const formattedDate = dateObj.toISOString().split('T')[0]
         const date = encodeURIComponent(formattedDate)
-      
+
         router.push(`/dashboard/papeleta_control?itinerary=${itinerary}&vehicle_id=${vehicle}&date=${date}`)
-      }
+    }
 
     const handleSetFilters = (key: string, value: string) => {
         setFilters((prev) => ({ ...prev, [key]: value }))
@@ -91,7 +91,10 @@ export default function Schedule_page() {
                 return item.itinerary.toLowerCase().split(',').includes(value.toLowerCase())
             }
 
-            return (item as any)[key]?.toString().toLowerCase().includes(value.toLowerCase())
+            const typedKey = key as keyof Dispatch
+            const fieldValue = item[typedKey]
+
+            return fieldValue?.toString().toLowerCase().includes(value.toLowerCase())
         })
 
         return matchesSearch && matchesFilters
@@ -107,8 +110,8 @@ export default function Schedule_page() {
                 filters={filters}
                 setFilters={handleSetFilters}
                 filterOptions={[
-                    { label: 'Línea', key: 'line_id', options: Array.from({ length: 12 }, (_, i) => `${i + 1}`), },]}
-                    
+                    { label: 'Línea', key: 'line_id', options: Array.from({ length: 12 }, (_, i) => `${i + 1}`), },
+                ]}
             />
             <div className="mb-4">
                 <input
@@ -123,7 +126,6 @@ export default function Schedule_page() {
                 data={filteredData}
                 onRowDoubleClick={handleRowDoubleClick}
             />
-
         </div>
     )
 }

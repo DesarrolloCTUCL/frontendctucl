@@ -62,11 +62,15 @@ export default function ParadasPage() {
         return item.route.toLowerCase().split(',').includes(value.toLowerCase())
       }
   
-      return (item as any)[key]?.toString().toLowerCase() === value.toLowerCase()
+      const typedKey = key as keyof BusStation
+      const fieldValue = item[typedKey]
+  
+      return fieldValue?.toString().toLowerCase() === value.toLowerCase()
     })
   
     return matchesSearch && matchesFilters
   })
+  
 
   return (
     <div className="p-6">
