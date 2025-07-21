@@ -68,19 +68,21 @@ export default function Recharge_point_page() {
 
     const filteredData = data.filter((item) => {
         const matchesSearch = [item.business_name, item.name, item.address]
-            .some((field) =>
-                field.toString().toLowerCase().includes(search.toLowerCase())
-            )
-
+          .some((field) =>
+            field.toString().toLowerCase().includes(search.toLowerCase())
+          )
+      
         const matchesFilters = Object.entries(filters).every(([key, value]) => {
-            if (!value) return true
-
-
-            return (item as any)[key]?.toString().toLowerCase().includes(value.toLowerCase())
+          if (!value) return true
+      
+          const typedKey = key as keyof Recharge_point
+          const fieldValue = item[typedKey]
+      
+          return fieldValue?.toString().toLowerCase().includes(value.toLowerCase())
         })
-
+      
         return matchesSearch && matchesFilters
-    })
+      })
 
     return (
         <div className="p-6">
