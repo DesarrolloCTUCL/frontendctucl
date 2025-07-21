@@ -1,7 +1,9 @@
-// app/dashboard/papeleta_control/page.tsx
+import dynamic from 'next/dynamic'
 
-import PapeletaControlClient from './papeleta_control_client'
+const PapeletaControlClient = dynamic(() => import('./papeleta_control_client'), {
+  ssr: false,
+})
 
-export default function PapeletaControlPage() {
+export default function Page() {
   return <PapeletaControlClient />
 }
