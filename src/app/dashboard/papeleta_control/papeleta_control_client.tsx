@@ -114,6 +114,7 @@ export default function PapeletaControlClient() {
         const gps = gpsData.find(g => Number(g.control_point_id) === Number(pcNumero))
         if (!gps?.datetime) return '—'
         return gps.datetime.substring(11, 19) // hh:mm:ss
+        
       }
     },
     {
@@ -123,11 +124,20 @@ export default function PapeletaControlClient() {
         const gps = gpsData.find(g => Number(g.control_point_id) === Number(pcNumero))
         if (!gps) return '—'
         try {
-          const gpsTime = new Date(gps.datetime).getTime()
-          const pcTime = new Date(`${date}T${row.original.hora}`).getTime()
-          const diffMs = Math.abs(gpsTime - pcTime)
-          const diffMin = Math.floor(diffMs / 60000)
-          return `${diffMin} min`
+          const parseTimeToMinutes = (timeStr: string) => {
+            const [h, m, s] = timeStr.split(':').map(Number)
+            return h * 60 + m + s / 60
+          }
+          
+          const gpsTimeStr = gps.datetime.substring(11, 19)
+          const pcTimeStr = row.original.hora
+          
+          const gpsMinutes = parseTimeToMinutes(gpsTimeStr)
+          const pcMinutes = parseTimeToMinutes(pcTimeStr)
+          
+          const diffMin = Math.abs(gpsMinutes - pcMinutes)
+          return `${Math.floor(diffMin)} min`
+          
         } catch {
           return '—'
         }

@@ -25,19 +25,20 @@ const columns: ColumnDef<Dispatch>[] = [
     { accessorKey: 'vehicle_id', header: 'Vehiculo' },
     { accessorKey: 'line_id', header: 'Linea' },
     {
-        accessorKey: 'date', header: 'Fecha', cell: ({ row }) => {
-            const date = new Date(row.original.date)
-            return date.toLocaleDateString('es-EC', {
-                day: '2-digit',
-                month: '2-digit',
-                year: 'numeric',
-            })
+        accessorKey: 'date',
+        header: 'Fecha',
+        cell: ({ row }) => {
+          const isoDate = row.original.date // "2025-07-22T00:00:00.000Z"
+          const fecha = isoDate.slice(0, 10).split('-').reverse().join('/')
+          return fecha // "22/07/2025"
         },
-    },
+      },
     { accessorKey: 'observations', header: 'Observaciones' },
     { accessorKey: 'driver', header: 'Conductor' },
     {
-        accessorKey: 'create_at', header: 'Fecha registro', cell: ({ row }) => {
+        accessorKey: 'create_at',
+        header: 'Fecha registro',
+        cell: ({ row }) => {
             const date = new Date(row.original.create_at)
             return date.toLocaleDateString('es-EC', {
                 day: '2-digit',
@@ -48,29 +49,38 @@ const columns: ColumnDef<Dispatch>[] = [
             })
         },
     },
-
 ]
 
-export default function Schedule_page() {
+export default function SchedulePage() {
     const [data, setData] = useState<Dispatch[]>([])
     const [search, setSearch] = useState('')
     const [filters, setFilters] = useState<{ [key: string]: string }>({})
+    const [loading, setLoading] = useState(false)
+    const router = useRouter()
+
+    const fetchByDate = async (date: string) => {
+        try {
+            setLoading(true)
+            const res = await fetchFromBackend(`/schedule/by-exact-date?date=${date}`)
+            setData(res.data)
+        } catch (err) {
+            console.error('Error al filtrar por fecha:', err)
+            setData([])
+        } finally {
+            setLoading(false)
+        }
+    }
 
     useEffect(() => {
-        fetchFromBackend('/schedule')
-            .then((res) => setData(res.data))
-            .catch((err) => console.error('Error al cargar paradas:', err))
-    }, [])
-
-    const router = useRouter()
+        if (filters.date) {
+            fetchByDate(filters.date)
+        }
+    }, [filters.date])
 
     const handleRowDoubleClick = (row: Dispatch) => {
         const itinerary = encodeURIComponent(row.itinerary)
         const vehicle = encodeURIComponent(row.vehicle_id.toString())
-        const dateObj = new Date(row.date)
-        const formattedDate = dateObj.toISOString().split('T')[0]
-        const date = encodeURIComponent(formattedDate)
-
+        const date = encodeURIComponent(row.date.split('T')[0]) // Asegura formato YYYY-MM-DD
         router.push(`/dashboard/papeleta_control?itinerary=${itinerary}&vehicle_id=${vehicle}&date=${date}`)
     }
 
@@ -85,7 +95,7 @@ export default function Schedule_page() {
             )
 
         const matchesFilters = Object.entries(filters).every(([key, value]) => {
-            if (!value) return true
+            if (!value || key === 'date') return true
 
             if (key === 'itinerary') {
                 return item.itinerary.toLowerCase().split(',').includes(value.toLowerCase())
@@ -93,7 +103,6 @@ export default function Schedule_page() {
 
             const typedKey = key as keyof Dispatch
             const fieldValue = item[typedKey]
-
             return fieldValue?.toString().toLowerCase().includes(value.toLowerCase())
         })
 
@@ -110,22 +119,33 @@ export default function Schedule_page() {
                 filters={filters}
                 setFilters={handleSetFilters}
                 filterOptions={[
-                    { label: 'Línea', key: 'line_id', options: Array.from({ length: 12 }, (_, i) => `${i + 1}`), },
+                    {
+                        label: 'Línea',
+                        key: 'line_id',
+                        options: Array.from({ length: 12 }, (_, i) => `${i + 1}`),
+                    },
                 ]}
             />
+
             <div className="mb-4">
+                <label className="mr-2">Filtrar por fecha:</label>
                 <input
                     type="date"
                     className="p-2 border border-gray-300 rounded"
-                    value={filters.created_at || ''}
+                    value={filters.date || ''}
                     onChange={(e) => handleSetFilters('date', e.target.value)}
                 />
             </div>
-            <DataTable
-                columns={columns}
-                data={filteredData}
-                onRowDoubleClick={handleRowDoubleClick}
-            />
+
+            {loading ? (
+                <p className="text-gray-500">Cargando datos...</p>
+            ) : (
+                <DataTable
+                    columns={columns}
+                    data={filteredData}
+                    onRowDoubleClick={handleRowDoubleClick}
+                />
+            )}
         </div>
     )
 }
