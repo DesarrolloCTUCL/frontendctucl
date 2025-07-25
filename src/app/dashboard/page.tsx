@@ -79,7 +79,6 @@ const data = {
 export default function HomePage() {
   return (
     <div className="flex min-h-screen">
-      <AppSidebar />
       <main className="flex-1 p-10 space-y-6">
         <h1 className="text-2xl font-bold">Bienvenidos al sistema de control del Consorcio de Transportistas Urbanos Ciudad de Loja</h1>
         <p className="text-lg">Usuario: <strong>{data.user.name}</strong></p>
@@ -107,19 +106,4 @@ export default function HomePage() {
   )
 }
 
-export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-  return (
-    <Sidebar collapsible="icon" {...props}>
-      <SidebarHeader>
-        <TeamSwitcher />
-      </SidebarHeader>
-      <SidebarContent>
-        <NavMain items={data.navMain} />
-      </SidebarContent>
-      <SidebarFooter>
-        <NavUser />
-      </SidebarFooter>
-      <SidebarRail />
-    </Sidebar>
-  )
-}
+
