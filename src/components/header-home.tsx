@@ -8,7 +8,7 @@ export default function HeaderHome(){
         <div className="flex h-16 items-center justify-between px-4 md:px-6">
             <Link href="/" className="flex items-center gap-2">
                 <Bus className="h-6 w-6" />
-                <span className="text-xl font-bold">Simtra</span>
+                <span className="text-xl font-bold">CTUCL</span>
             </Link>
             <Link href="/login">
                 <Button>Iniciar Sesión</Button>

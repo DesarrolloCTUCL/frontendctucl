@@ -6,6 +6,7 @@ import { ColumnDef } from '@tanstack/react-table'
 import { fetchFromBackend } from '@/lib/api_backend'
 import { DataTable } from '@/components/mqtt-table'
 import { useSearchParams } from 'next/navigation'
+import { MapPin } from "lucide-react"
 
 type ChainPC = {
   numero: number
@@ -93,6 +94,19 @@ export default function PapeletaControlClient() {
     }
   }
 
+  const handleMapClick = (itinerario: Itinerario) => {
+    if (!vehicleId) {
+      alert('Falta vehicle_id')
+      return
+    }
+  
+    const start = `${date}T${itinerario.hora_despacho}`
+    const end = `${date}T${itinerario.hora_fin}`
+    const url = `/dashboard/controlmap?device_id=${vehicleId}&start=${start}&end=${end}`
+  
+    window.open(url, "_blank")
+  }
+  
   const itineraryColumns: ColumnDef<Itinerario>[] = [
     { accessorKey: 'recorrido', header: 'Recorrido' },
     { accessorKey: 'hora_despacho', header: 'Hora despacho' },
@@ -102,8 +116,20 @@ export default function PapeletaControlClient() {
       header: 'Turno',
       cell: ({ row }) => row.original.turno.itinerary,
     },
+    {
+      id: 'ver-mapa',
+      header: 'Mapa',
+      cell: ({ row }) => (
+        <button
+          className="text-blue-600 hover:text-blue-800"
+          onClick={() => handleMapClick(row.original)}
+          title="Ver en mapa"
+        >
+          <MapPin className="w-5 h-5" />
+        </button>
+      ),
+    }
   ]
-
   const chainpcColumns: ColumnDef<ChainPC>[] = [
     { accessorKey: 'name', header: 'Punto de control' },
     { accessorKey: 'hora', header: 'Hora de llegada' },
@@ -123,26 +149,45 @@ export default function PapeletaControlClient() {
         const pcNumero = row.original.numero
         const gps = gpsData.find(g => Number(g.control_point_id) === Number(pcNumero))
         if (!gps) return '—'
+    
         try {
-          const parseTimeToMinutes = (timeStr: string) => {
+          const parseTimeToSeconds = (timeStr: string) => {
             const [h, m, s] = timeStr.split(':').map(Number)
-            return h * 60 + m + s / 60
+            return h * 3600 + m * 60 + s
           }
-          
+    
           const gpsTimeStr = gps.datetime.substring(11, 19)
           const pcTimeStr = row.original.hora
-          
-          const gpsMinutes = parseTimeToMinutes(gpsTimeStr)
-          const pcMinutes = parseTimeToMinutes(pcTimeStr)
-          
-          const diffMin = Math.abs(gpsMinutes - pcMinutes)
-          return `${Math.floor(diffMin)} min`
-          
+    
+          const gpsSeconds = parseTimeToSeconds(gpsTimeStr)
+          const pcSeconds = parseTimeToSeconds(pcTimeStr)
+    
+          const diffSeconds = pcSeconds - gpsSeconds // invertimos para que positivo = adelantado
+          const sign = diffSeconds > 0 ? '+' : diffSeconds < 0 ? '-' : ''
+    
+          const absDiff = Math.abs(diffSeconds)
+          const minutes = Math.floor(absDiff / 60)
+          const seconds = Math.floor(absDiff % 60)
+    
+          const color =
+            diffSeconds > 0
+              ? 'text-green-600' // adelantado
+              : diffSeconds < 0
+              ? 'text-red-600' // retrasado
+              : 'text-gray-600' // sin diferencia
+    
+          return (
+            <span className={color}>
+              {sign}{minutes}m {seconds}s
+            </span>
+          )
         } catch {
           return '—'
         }
       }
-    },
+    }
+    
+    ,
     {
       header: 'Velocidad',
       cell: ({ row }) => {
@@ -168,7 +213,7 @@ export default function PapeletaControlClient() {
   return (
     <div className="p-6 space-y-8">
       <h1 className="text-2xl font-bold mb-4">Papeleta de Control</h1>
-      <div className="flex gap-8">
+      <div className="flex gap-8 items-start">
         {/* Tabla de itinerarios - lado izquierdo */}
         <div className="flex-1">
           <DataTable

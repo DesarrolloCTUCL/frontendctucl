@@ -1,5 +1,5 @@
 import Image from "next/image"
-import bgImage from '@/assets/buses.jpg';
+import bgImage from '@/assets/buses.webp';
 import FeaturesApp from "@/components/features-home";
 import HeaderHome from "@/components/header-home";
 import FooterHome from "@/components/footer-home";
@@ -10,7 +10,7 @@ export default function Home() {
 				<div className="w-full flex-1 p-4 bg-[url('/purple.jpg')] bg-cover bg-center">
 					<div className="px-4 md:px-6">
 						<h1 className="text-3xl text-white font-bold tracking-tighter sm:text-4xl md:text-5xl lg:text-6xl/none">
-							Sistema Integral de Monitoreo para el transporte Urbano
+							Sistema de control Consorcio Ciudad de Loja
 						</h1>
 						<div className="grid gap-6 lg:grid-cols-2 lg:gap-12 xl:grid-cols-6">
 							<div className="col-span-4 flex flex-col justify-center space-y-4">

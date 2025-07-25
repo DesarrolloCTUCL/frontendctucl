@@ -9,7 +9,7 @@ export default function FeaturesApp() {
 				</div>
 				<h3 className="text-xl font-bold">Análisis en Tiempo Real</h3>
 				<p className="text-center text-muted-foreground">
-					Monitoree el rendimiento de su flota con paneles de control intuitivos y reportes detallados.
+					Monitorización del rendimiento de flota con paneles de control intuitivos y reportes detallados.
 				</p>
 			</div>
 			<div className="flex flex-col bg-slate-50 items-center space-y-2 rounded-lg border p-6">
