@@ -81,7 +81,7 @@ export default function SchedulePage() {
         const itinerary = encodeURIComponent(row.itinerary)
         const vehicle = encodeURIComponent(row.vehicle_id.toString())
         const date = encodeURIComponent(row.date.split('T')[0]) // Asegura formato YYYY-MM-DD
-        router.push(`/dashboard/papeleta_control?itinerary=${itinerary}&vehicle_id=${vehicle}&date=${date}`)
+        router.push(`/dashboard/despacho_general/papeleta_control?itinerary=${itinerary}&vehicle_id=${vehicle}&date=${date}`)
     }
 
     const handleSetFilters = (key: string, value: string) => {

@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-	title: "Simtra App",
+	title: "CTUCL",
 	description: "Powered by Desarrollo",
 };
 

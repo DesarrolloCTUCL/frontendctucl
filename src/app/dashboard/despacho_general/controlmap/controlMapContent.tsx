@@ -32,7 +32,6 @@ export default function ControlMapContent() {
           `https://ctucloja.com/api/trackgps/by-range?device_id=${deviceId}&start=${start}&end=${end}`
         )
         const data = await res.json()
-        console.log('Datos recibidos:', data.data)
         if (data.status === 'success') {
           setTrackPoints(data.data)
         } else {
@@ -105,14 +104,16 @@ export default function ControlMapContent() {
           !isNaN(point.lng) &&
           !isNaN(point.lat)
         ) {
+         
+
+          const horaExacta = point.timestamp
+            ? point.timestamp.split('T')[1].split('.')[0]
+            : 'Sin hora'
+
           new mapboxgl.Marker()
             .setLngLat([point.lng, point.lat])
             .setPopup(
-              new mapboxgl.Popup({ offset: 25 }).setText(
-                point.timestamp
-                  ? `Hora: ${new Date(point.timestamp).toLocaleTimeString()}`
-                  : 'Sin hora'
-              )
+              new mapboxgl.Popup({ offset: 25 }).setText(`Hora: ${horaExacta}`)
             )
             .addTo(map)
         }

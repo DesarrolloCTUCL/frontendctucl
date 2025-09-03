@@ -3,6 +3,11 @@ import * as React from "react"
 import {
 	Bot,
 	Users2,
+	Store,
+	Smartphone,
+	Bus,
+	Settings,
+	MonitorCog,
 } from "lucide-react"
 
 import { NavMain } from "@/components/nav-main"
@@ -43,7 +48,7 @@ const data = {
 		{
 			title: "Paradas",
 			url: "#",
-			icon: Bot,
+			icon: Store,
 			isActive: false,
 			items: [
 				{
@@ -54,10 +59,6 @@ const data = {
 					title: "Generales",
 					url: "/dashboard/paradas",
 				},
-				{
-					title: "Puntos de control",
-					url: "/dashboard/pcontrol",
-				},
 			],
 		},
 
@@ -65,7 +66,7 @@ const data = {
 		{
 			title: "Puntos de recarga",
 			url: "#",
-			icon: Bot,
+			icon: Smartphone,
 			isActive: false,
 			items: [
 				{
@@ -74,7 +75,7 @@ const data = {
 				},
 				{
 					title: "Mapa de recargadores",
-					url: "/dashboard/paradas",
+					url: "/dashboard/recargadores_mapa",
 				},
 				{
 					title: "Agregar recargador",
@@ -83,34 +84,57 @@ const data = {
 			],
 		},
 
-		{	title: "Control de flota",
+		{	title: "Monitoreo",
 			url: "#",
-			icon: Bot,
+			icon: Bus,
 			isActive: false,
 			items: [
 				{
 					title: "Despacho general",
 					url: "/dashboard/despacho_general",
-				},
+					items: [
+					  {
+						title: "Papeleta Control",
+						url: "/dashboard/despacho_general/papeleta_control",
+						title2: "Mapa",
+						url2: "/dashboard/despacho_general/controlmap",
+					  }
+					]
+				  },
 				{
 					title: "Despacho por ruta",
 					url: "/dashboard/despacho_ruta",
 				},
-				{
-					title: "Despacho por bus",
-					url: "/dashboard/despacho_bus",
-				},
+		
 				{
 					title: "Mapa buses",
-					url: "/dashboard/mapa_buses",
+					url: "/dashboard/mapas_buses",
 				},
 				{
 					title: "Itinerarios",
 					url: "/dashboard/itinerarios",
 				},
+	
+			]
+		},
+		{	title: "Control de flota",
+			url: "#",
+			icon: MonitorCog,
+			isActive: false,
+			items: [
 				{
-					title: "Asignación rutas",
-					url: "/dashboard/asignacion_rutas",
+					title: "Crear itinerario",
+					url: "/dashboard/despacho_general",
+				},
+	
+				{
+					title: "Asignar itinerario",
+					url: "/dashboard/asignar_itinerario",
+				},
+
+				{
+					title: "Franjas Horarias",
+					url: "/dashboard/franjas_horarias",
 				},
 			]
 		}

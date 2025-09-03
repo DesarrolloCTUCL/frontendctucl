@@ -44,7 +44,7 @@ export default function Home() {
 				<Card className="border-border/50 shadow-lg w-96">
 					<CardHeader className="space-y-1">
 					<div className="text-center mb-8">
-					<h1 className="text-3xl font-bold tracking-tight text-primary">Simtra</h1>
+					<h1 className="text-3xl font-bold tracking-tight text-primary">CTUCL</h1>
 					<p className="text-muted-foreground mt-2">Inicia Sesion</p>
 				</div>
 						<CardTitle className="text-2xl text-center">Bienvenido Nuevamente!</CardTitle>

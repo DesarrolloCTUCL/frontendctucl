@@ -12,26 +12,42 @@ import {
 } from "@/components/ui/breadcrumb";
 import { SidebarTrigger } from "./ui/sidebar";
 
+// Función para capitalizar y reemplazar guiones bajos o medios
+function formatSegment(segment: string) {
+  return segment
+    .replace(/[-_]/g, " ") // Reemplaza - o _ por espacio
+    .replace(/\b\w/g, (char) => char.toUpperCase()); // Capitaliza cada palabra
+}
+
 export function BreadcrumbDashboard() {
   const pathname = usePathname();
   const pathSegments = pathname.split("/").filter(segment => segment);
 
   return (
     <Breadcrumb>
-      <BreadcrumbList>
+      <BreadcrumbList className="flex items-center">
         <SidebarTrigger />
+
+        {/* Enlace a Inicio */}
+        <BreadcrumbItem key="home">
+          <BreadcrumbLink>
+            <Link href="/">Inicio</Link>
+          </BreadcrumbLink>
+        </BreadcrumbItem>
+
         {pathSegments.map((segment, index) => {
           const href = `/${pathSegments.slice(0, index + 1).join("/")}`;
           const isLast = index === pathSegments.length - 1;
+
           return (
-            < div className="flex flex-row justify-center items-center align-middle" key={href}>
-              <BreadcrumbSeparator key={`sep-${index}`} />
-              <BreadcrumbItem key={href}>
+            <div className="flex items-center" key={href}>
+              <BreadcrumbSeparator />
+              <BreadcrumbItem>
                 {isLast ? (
-                  <BreadcrumbPage>{decodeURIComponent(segment)}</BreadcrumbPage>
+                  <BreadcrumbPage>{formatSegment(decodeURIComponent(segment))}</BreadcrumbPage>
                 ) : (
                   <BreadcrumbLink>
-                    <Link href={href}>{decodeURIComponent(segment)}</Link>
+                    <Link href={href}>{formatSegment(decodeURIComponent(segment))}</Link>
                   </BreadcrumbLink>
                 )}
               </BreadcrumbItem>

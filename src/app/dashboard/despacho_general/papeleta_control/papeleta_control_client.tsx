@@ -102,7 +102,7 @@ export default function PapeletaControlClient() {
   
     const start = `${date}T${itinerario.hora_despacho}`
     const end = `${date}T${itinerario.hora_fin}`
-    const url = `/dashboard/controlmap?device_id=${vehicleId}&start=${start}&end=${end}`
+    const url = `/dashboard/despacho_general/controlmap?device_id=${vehicleId}&start=${start}&end=${end}`
   
     window.open(url, "_blank")
   }
