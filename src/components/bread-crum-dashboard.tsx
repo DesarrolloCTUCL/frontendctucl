@@ -30,7 +30,7 @@ export function BreadcrumbDashboard() {
 
         {/* Enlace a Inicio */}
         <BreadcrumbItem key="home">
-          <BreadcrumbLink>
+          <BreadcrumbLink asChild>
             <Link href="/">Inicio</Link>
           </BreadcrumbLink>
         </BreadcrumbItem>
@@ -44,10 +44,14 @@ export function BreadcrumbDashboard() {
               <BreadcrumbSeparator />
               <BreadcrumbItem>
                 {isLast ? (
-                  <BreadcrumbPage>{formatSegment(decodeURIComponent(segment))}</BreadcrumbPage>
+                  <BreadcrumbPage>
+                    {formatSegment(decodeURIComponent(segment))}
+                  </BreadcrumbPage>
                 ) : (
-                  <BreadcrumbLink>
-                    <Link href={href}>{formatSegment(decodeURIComponent(segment))}</Link>
+                  <BreadcrumbLink asChild>
+                    <Link href={href}>
+                      {formatSegment(decodeURIComponent(segment))}
+                    </Link>
                   </BreadcrumbLink>
                 )}
               </BreadcrumbItem>

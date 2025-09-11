@@ -124,9 +124,13 @@ const data = {
 			items: [
 				{
 					title: "Crear itinerario",
-					url: "/dashboard/despacho_general",
+					url: "/dashboard/crear_itinerario",
 				},
 	
+				{
+					title: "Editar itinerario",
+					url: "/dashboard/editar_itinerario",
+				},
 				{
 					title: "Asignar itinerario",
 					url: "/dashboard/asignar_itinerario",
