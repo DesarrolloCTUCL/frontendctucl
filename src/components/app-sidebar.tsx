@@ -41,7 +41,7 @@ const data = {
 				},
 				{
 					title: "Buses",
-					url: "/dashboard/buses",
+					url: "/dashboard/buses-socios",
 				}
 			],
 		},

@@ -93,17 +93,9 @@ export default function Recharge_point_page() {
                 setSearch={setSearch}
                 filters={filters}
                 setFilters={handleSetFilters}
-                filterOptions={[
-                    { label: 'Línea', key: 'line_id', options: Array.from({ length: 12 }, (_, i) => `${i + 1}`), },]}
+
             />
-            <div className="mb-4">
-                <input
-                    type="date"
-                    className="p-2 border border-gray-300 rounded"
-                    value={filters.created_at || ''}
-                    onChange={(e) => handleSetFilters('date', e.target.value)}
-                />
-            </div>
+
             <DataTable columns={columns} data={filteredData} />
         </div>
     )
