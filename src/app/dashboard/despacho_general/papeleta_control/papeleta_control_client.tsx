@@ -216,11 +216,18 @@ export default function PapeletaControlClient() {
       <div className="flex gap-8 items-start">
         {/* Tabla de itinerarios - lado izquierdo */}
         <div className="flex-1">
-          <DataTable
-            columns={itineraryColumns}
-            data={itinerarios}
-            onRowDoubleClick={handleRowDoubleClick}
-          />
+        <DataTable
+  columns={itineraryColumns}
+  data={itinerarios}
+  onRowDoubleClick={handleRowDoubleClick}
+  getRowClassName={(row) =>
+    selectedItinerario?.recorrido === row.recorrido &&
+    selectedItinerario?.hora_despacho === row.hora_despacho &&
+    selectedItinerario?.hora_fin === row.hora_fin
+      ? "bg-blue-100 text-blue-800"
+      : ""
+  }
+/>
         </div>
 
         {/* Tabla de puntos de control - lado derecho */}
