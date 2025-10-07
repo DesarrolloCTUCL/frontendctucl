@@ -5,17 +5,17 @@ export interface userAuht{
     password:string
 }
 
-export interface LocalUser{
-
-    name:string,
-    lastname:string,
-    accountType:string,
-    address:string,
-    register:string,
-    email:string,
-    username:string,
-    uuid:string,
-    id:number
+export interface LocalUser {
+  id: number;
+  uuid: string;
+  username: string;
+  email: string;
+  name: string;
+  lastname: string;
+  accountType: string;
+  address: string;
+  register: string;
+  image?: string; // <-- agregamos la foto como opcional
 }
 export interface SessionState {
   user: LocalUser | null;

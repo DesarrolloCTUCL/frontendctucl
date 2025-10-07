@@ -27,6 +27,7 @@ export default function Home() {
 		try {
 			const userData = await userAuthLogin(credentials)
 			setUser(userData)
+			localStorage.setItem("userRole", userData.accountType)
 			router.push("/dashboard/")
 		} catch (error) {
 			console.log(error)

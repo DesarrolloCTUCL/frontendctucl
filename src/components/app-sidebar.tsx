@@ -21,6 +21,56 @@ import {
 	SidebarRail,
 } from "@/components/ui/sidebar"
 
+
+const rolePermissions: Record<string, { [section: string]: string[] }> = {
+	admin: {
+	  Usuarios: ["Personal", "Socios - Buses", "Conductores"],
+	  Paradas: ["Automatizadas", "Generales"],
+	  "Puntos de recarga": ["Listado de recargadores", "Mapa de recargadores", "Agregar recargador"],
+	  Monitoreo: ["Despacho general", "Despacho por ruta", "Mapa buses", "Itinerarios"],
+	  "Control de flota": ["Crear itinerario","Editar itinerario","Asignar itinerario","Franjas Horarias","Crear-Editar Líneas"]
+	},
+	monitoreo: {
+	  Monitoreo: ["Despacho general", "Despacho por ruta", "Mapa buses", "Itinerarios"]
+	},
+	sir: {
+	  "Puntos de recarga": ["Listado de recargadores", "Mapa de recargadores", "Agregar recargador"],
+	  Monitoreo: ["Despacho general", "Despacho por ruta", "Mapa buses", "Itinerarios"]
+	},
+	sae: {
+	  "Puntos de recarga": ["Listado de recargadores", "Mapa de recargadores", "Agregar recargador"],
+	  Monitoreo: ["Despacho general", "Despacho por ruta", "Mapa buses", "Itinerarios"]
+	},
+	secretaria: {
+	  "Puntos de recarga": ["Listado de recargadores", "Mapa de recargadores", "Agregar recargador"],
+	  Monitoreo: ["Despacho general", "Despacho por ruta", "Mapa buses", "Itinerarios"]
+	},
+	taller: {
+	  "Puntos de recarga": ["Listado de recargadores", "Mapa de recargadores", "Agregar recargador"],
+	  Monitoreo: ["Despacho general", "Despacho por ruta", "Mapa buses", "Itinerarios"]
+	},
+	gerencia: {
+	  "Puntos de recarga": ["Listado de recargadores", "Mapa de recargadores", "Agregar recargador"],
+	  Monitoreo: ["Despacho general", "Despacho por ruta", "Mapa buses", "Itinerarios"]
+	},
+	credencializacion: {
+	  "Puntos de recarga": ["Listado de recargadores", "Mapa de recargadores", "Agregar recargador"],
+	  Monitoreo: ["Despacho general", "Despacho por ruta", "Mapa buses", "Itinerarios"]
+	},
+	socio: {
+	  "Puntos de recarga": ["Listado de recargadores", "Mapa de recargadores", "Agregar recargador"],
+	  Monitoreo: ["Despacho general", "Despacho por ruta", "Mapa buses", "Itinerarios"]
+	},
+	viewer: {
+	  "Puntos de recarga": ["Listado de recargadores", "Mapa de recargadores"],
+	  Monitoreo: ["Despacho general", "Mapa buses"]
+	},
+	usuario:{}
+  };
+  
+  
+
+
 // This is sample data.
 const data = {
 	user: {
@@ -36,13 +86,17 @@ const data = {
 			isActive: false,
 			items: [
 				{
-					title: "Administradores",
+					title: "Personal",
 					url: "/dashboard/usuarios",
 				},
 				{
-					title: "Buses",
+					title: "Socios - Buses",
 					url: "/dashboard/buses-socios",
-				}
+				},
+				{
+					title: "Conductores",
+					url: "/dashboard/usuarios",
+				},
 			],
 		},
 		{
@@ -140,6 +194,12 @@ const data = {
 					title: "Franjas Horarias",
 					url: "/dashboard/franjas_horarias",
 				},
+				,
+
+				{
+					title: "Crear-Editar Líneas",
+					url: "/dashboard/crear_editar_linea",
+				},
 			]
 		}
 	],
@@ -147,18 +207,38 @@ const data = {
 }
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+	const [role, setRole] = React.useState<string | null>(null);
+  
+	React.useEffect(() => {
+	  const r = localStorage.getItem("userRole");
+	  setRole(r);
+	}, []);
+  
+	const filteredNavMain = React.useMemo(() => {
+	  if (!role) return [];
+	  const permissions = rolePermissions[role] || {};
+  
+	  return data.navMain
+		.filter(section => permissions[section.title])
+		.map(section => ({
+		  ...section,
+		  items: section.items.filter(item => permissions[section.title].includes(item.title))
+		}));
+	}, [role]);
+  
 	return (
-		<Sidebar collapsible="icon" {...props}>
-			<SidebarHeader>
-				<TeamSwitcher />
-			</SidebarHeader>
-			<SidebarContent>
-				<NavMain items={data.navMain} />
-			</SidebarContent>
-			<SidebarFooter>
-				<NavUser/>
-			</SidebarFooter>
-			<SidebarRail />
-		</Sidebar>
-	)
-}
+	  <Sidebar collapsible="icon" {...props}>
+		<SidebarHeader>
+		  <TeamSwitcher />
+		</SidebarHeader>
+		<SidebarContent>
+		  <NavMain items={filteredNavMain} />
+		</SidebarContent>
+		<SidebarFooter>
+		  <NavUser />
+		</SidebarFooter>
+		<SidebarRail />
+	  </Sidebar>
+	);
+  }
+  

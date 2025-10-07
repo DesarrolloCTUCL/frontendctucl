@@ -1,6 +1,17 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+
+interface BusLine {
+  id: number;
+  name: string;
+  number: number;
+}
+
+interface Itinerary {
+  key: string;
+  data: any; // puedes cambiar según lo que tengas
+}
 
 export default function SchedulePage() {
   const [formData, setFormData] = useState({
@@ -13,13 +24,90 @@ export default function SchedulePage() {
     observations: "",
   });
 
+  const [lines, setLines] = useState<BusLine[]>([]);
+  const [allItineraries, setAllItineraries] = useState<string[]>([]);
+  const [filteredItineraries, setFilteredItineraries] = useState<string[]>([]);
+  const [prefixFilter, setPrefixFilter] = useState<string[]>([]); // ahora es un array para checkboxes
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
 
+  // Cargar líneas de bus
+  useEffect(() => {
+    const fetchLines = async () => {
+      try {
+        const res = await fetch("https://ctucloja.com/api/bus-line");
+        if (!res.ok) throw new Error("Error al cargar las líneas");
+        const json = await res.json();
+        setLines(json.data);
+      } catch (err: any) {
+        setMessage(`❌ ${err.message}`);
+      }
+    };
+    fetchLines();
+  }, []);
+
+  // Cargar itinerarios al seleccionar línea
+  useEffect(() => {
+    const fetchItineraries = async () => {
+      if (!formData.line_id) {
+        setAllItineraries([]);
+        setFilteredItineraries([]);
+        setFormData(prev => ({ ...prev, itinerary: "" }));
+        return;
+      }
+
+      try {
+        const selectedLine = lines.find(line => line.number === Number(formData.line_id));
+        if (!selectedLine) return;
+
+        const lineNumber = "L" + selectedLine.number;
+        const endpoint = `https://ctucloja.com/api/itineraries/line/${lineNumber}`;
+        const res = await fetch(endpoint);
+        if (!res.ok) throw new Error("Error al cargar itinerarios");
+
+        const json = await res.json();
+        const keys = Object.keys(json.data || {});
+
+        setAllItineraries(keys);
+        setFilteredItineraries(keys);
+        setFormData(prev => ({ ...prev, itinerary: "" }));
+      } catch (err: any) {
+        console.error(err);
+        setMessage(`❌ ${err.message}`);
+        setAllItineraries([]);
+        setFilteredItineraries([]);
+      }
+    };
+
+    fetchItineraries();
+  }, [formData.line_id, lines]);
+
+  // Filtrar itinerarios según prefijos seleccionados
+  useEffect(() => {
+    if (prefixFilter.length === 0) {
+      setFilteredItineraries(allItineraries);
+    } else {
+      setFilteredItineraries(
+        allItineraries.filter(itinerary =>
+          prefixFilter.some(prefix => itinerary.startsWith(prefix))
+        )
+      );
+    }
+    setFormData(prev => ({ ...prev, itinerary: "" })); // resetear itinerario al cambiar filtro
+  }, [prefixFilter, allItineraries]);
+
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
   ) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handlePrefixChange = (prefix: string) => {
+    setPrefixFilter(prev =>
+      prev.includes(prefix)
+        ? prev.filter(p => p !== prefix)
+        : [...prev, prefix]
+    );
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -30,16 +118,14 @@ export default function SchedulePage() {
     try {
       const res = await fetch("https://ctucloja.com/api/schedule", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           ...formData,
           vehicle_id: Number(formData.vehicle_id),
           line_id: Number(formData.line_id),
           user_id: Number(formData.user_id),
           driver: Number(formData.driver),
-          date: formData.date
+          date: formData.date,
         }),
       });
 
@@ -58,6 +144,9 @@ export default function SchedulePage() {
         driver: "",
         observations: "",
       });
+      setAllItineraries([]);
+      setFilteredItineraries([]);
+      setPrefixFilter([]);
     } catch (error: any) {
       setMessage(`❌ ${error.message}`);
     } finally {
@@ -86,24 +175,54 @@ export default function SchedulePage() {
           className="border p-2 rounded"
           required
         />
-        <input
-          type="text"
-          name="itinerary"
-          placeholder="Itinerario"
-          value={formData.itinerary}
-          onChange={handleChange}
-          className="border p-2 rounded"
-          required
-        />
-        <input
-          type="number"
+
+        {/* Select de líneas */}
+        <select
           name="line_id"
-          placeholder="ID de la Línea"
           value={formData.line_id}
           onChange={handleChange}
           className="border p-2 rounded"
           required
-        />
+        >
+          <option value="">Selecciona una línea</option>
+          {lines.map((line) => (
+            <option key={line.id} value={line.number}>
+              {line.number} - {line.name}
+            </option>
+          ))}
+        </select>
+
+        {/* Checkboxes de prefijos */}
+        <div className="flex gap-4">
+          {["H", "FH", "FD","V"].map(prefix => (
+            <label key={prefix} className="flex items-center gap-1">
+              <input
+                type="checkbox"
+                checked={prefixFilter.includes(prefix)}
+                onChange={() => handlePrefixChange(prefix)}
+              />
+              {prefix}
+            </label>
+          ))}
+        </div>
+
+        {/* Select de itinerarios */}
+        <select
+          name="itinerary"
+          value={formData.itinerary}
+          onChange={handleChange}
+          className="border p-2 rounded"
+          required
+          disabled={!filteredItineraries.length}
+        >
+          <option value="">Selecciona un itinerario</option>
+          {filteredItineraries.map((key) => (
+            <option key={key} value={key}>
+              {key}
+            </option>
+          ))}
+        </select>
+
         <input
           type="number"
           name="user_id"
@@ -140,9 +259,7 @@ export default function SchedulePage() {
       </form>
 
       {message && (
-        <div className="mt-4 p-2 text-center font-semibold">
-          {message}
-        </div>
+        <div className="mt-4 p-2 text-center font-semibold">{message}</div>
       )}
     </div>
   );
