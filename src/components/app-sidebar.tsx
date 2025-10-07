@@ -8,6 +8,7 @@ import {
 	Bus,
 	Settings,
 	MonitorCog,
+	Computer,
 } from "lucide-react"
 
 import { NavMain } from "@/components/nav-main"
@@ -24,51 +25,52 @@ import {
 
 const rolePermissions: Record<string, { [section: string]: string[] }> = {
 	admin: {
-	  Usuarios: ["Personal", "Socios - Buses", "Conductores"],
-	  Paradas: ["Automatizadas", "Generales"],
-	  "Puntos de recarga": ["Listado de recargadores", "Mapa de recargadores", "Agregar recargador"],
-	  Monitoreo: ["Despacho general", "Despacho por ruta", "Mapa buses", "Itinerarios"],
-	  "Control de flota": ["Crear itinerario","Editar itinerario","Asignar itinerario","Franjas Horarias","Crear-Editar Líneas"]
+		Administracion: ["Agregar usuario", "Personal"],
+		Usuarios: ["Socios - Buses", "Conductores"],
+		Paradas: ["Automatizadas", "Generales"],
+		"Puntos de recarga": ["Listado de recargadores", "Mapa de recargadores", "Agregar recargador"],
+		Monitoreo: ["Despacho general", "Despacho por ruta", "Mapa buses", "Itinerarios"],
+		"Control de flota": ["Crear itinerario", "Editar itinerario", "Asignar itinerario", "Franjas Horarias", "Crear-Editar Líneas"]
 	},
 	monitoreo: {
-	  Monitoreo: ["Despacho general", "Despacho por ruta", "Mapa buses", "Itinerarios"]
+		Monitoreo: ["Despacho general", "Despacho por ruta", "Mapa buses", "Itinerarios"]
 	},
 	sir: {
-	  "Puntos de recarga": ["Listado de recargadores", "Mapa de recargadores", "Agregar recargador"],
-	  Monitoreo: ["Despacho general", "Despacho por ruta", "Mapa buses", "Itinerarios"]
+		"Puntos de recarga": ["Listado de recargadores", "Mapa de recargadores", "Agregar recargador"],
+		Monitoreo: ["Despacho general", "Despacho por ruta", "Mapa buses", "Itinerarios"]
 	},
 	sae: {
-	  "Puntos de recarga": ["Listado de recargadores", "Mapa de recargadores", "Agregar recargador"],
-	  Monitoreo: ["Despacho general", "Despacho por ruta", "Mapa buses", "Itinerarios"]
+		"Puntos de recarga": ["Listado de recargadores", "Mapa de recargadores", "Agregar recargador"],
+		Monitoreo: ["Despacho general", "Despacho por ruta", "Mapa buses", "Itinerarios"]
 	},
 	secretaria: {
-	  "Puntos de recarga": ["Listado de recargadores", "Mapa de recargadores", "Agregar recargador"],
-	  Monitoreo: ["Despacho general", "Despacho por ruta", "Mapa buses", "Itinerarios"]
+		"Puntos de recarga": ["Listado de recargadores", "Mapa de recargadores", "Agregar recargador"],
+		Monitoreo: ["Despacho general", "Despacho por ruta", "Mapa buses", "Itinerarios"]
 	},
 	taller: {
-	  "Puntos de recarga": ["Listado de recargadores", "Mapa de recargadores", "Agregar recargador"],
-	  Monitoreo: ["Despacho general", "Despacho por ruta", "Mapa buses", "Itinerarios"]
+		"Puntos de recarga": ["Listado de recargadores", "Mapa de recargadores", "Agregar recargador"],
+		Monitoreo: ["Despacho general", "Despacho por ruta", "Mapa buses", "Itinerarios"]
 	},
 	gerencia: {
-	  "Puntos de recarga": ["Listado de recargadores", "Mapa de recargadores", "Agregar recargador"],
-	  Monitoreo: ["Despacho general", "Despacho por ruta", "Mapa buses", "Itinerarios"]
+		"Puntos de recarga": ["Listado de recargadores", "Mapa de recargadores", "Agregar recargador"],
+		Monitoreo: ["Despacho general", "Despacho por ruta", "Mapa buses", "Itinerarios"]
 	},
 	credencializacion: {
-	  "Puntos de recarga": ["Listado de recargadores", "Mapa de recargadores", "Agregar recargador"],
-	  Monitoreo: ["Despacho general", "Despacho por ruta", "Mapa buses", "Itinerarios"]
+		"Puntos de recarga": ["Listado de recargadores", "Mapa de recargadores", "Agregar recargador"],
+		Monitoreo: ["Despacho general", "Despacho por ruta", "Mapa buses", "Itinerarios"]
 	},
 	socio: {
-	  "Puntos de recarga": ["Listado de recargadores", "Mapa de recargadores", "Agregar recargador"],
-	  Monitoreo: ["Despacho general", "Despacho por ruta", "Mapa buses", "Itinerarios"]
+		"Puntos de recarga": ["Listado de recargadores", "Mapa de recargadores", "Agregar recargador"],
+		Monitoreo: ["Despacho general", "Despacho por ruta", "Mapa buses", "Itinerarios"]
 	},
 	viewer: {
-	  "Puntos de recarga": ["Listado de recargadores", "Mapa de recargadores"],
-	  Monitoreo: ["Despacho general", "Mapa buses"]
+		"Puntos de recarga": ["Listado de recargadores", "Mapa de recargadores"],
+		Monitoreo: ["Despacho general", "Mapa buses"]
 	},
-	usuario:{}
-  };
-  
-  
+	usuario: {}
+};
+
+
 
 
 // This is sample data.
@@ -80,15 +82,29 @@ const data = {
 	},
 	navMain: [
 		{
+			title: "Administracion",
+			url: "#",
+			icon: Computer,
+			isActive: false,
+			items: [
+
+				{
+					title: "Agregar usuario",
+					url: "/dashboard/new_user",
+				},
+				{
+					title: "Personal",
+					url: "/dashboard/usuarios",
+				}
+			],
+		},
+		{
 			title: "Usuarios",
 			url: "#",
 			icon: Users2,
 			isActive: false,
 			items: [
-				{
-					title: "Personal",
-					url: "/dashboard/usuarios",
-				},
+
 				{
 					title: "Socios - Buses",
 					url: "/dashboard/buses-socios",
@@ -115,7 +131,6 @@ const data = {
 				},
 			],
 		},
-
 		,
 		{
 			title: "Puntos de recarga",
@@ -138,7 +153,8 @@ const data = {
 			],
 		},
 
-		{	title: "Monitoreo",
+		{
+			title: "Monitoreo",
 			url: "#",
 			icon: Bus,
 			isActive: false,
@@ -147,19 +163,19 @@ const data = {
 					title: "Despacho general",
 					url: "/dashboard/despacho_general",
 					items: [
-					  {
-						title: "Papeleta Control",
-						url: "/dashboard/despacho_general/papeleta_control",
-						title2: "Mapa",
-						url2: "/dashboard/despacho_general/controlmap",
-					  }
+						{
+							title: "Papeleta Control",
+							url: "/dashboard/despacho_general/papeleta_control",
+							title2: "Mapa",
+							url2: "/dashboard/despacho_general/controlmap",
+						}
 					]
-				  },
+				},
 				{
 					title: "Despacho por ruta",
 					url: "/dashboard/despacho_ruta",
 				},
-		
+
 				{
 					title: "Mapa buses",
 					url: "/dashboard/mapas_buses",
@@ -168,10 +184,11 @@ const data = {
 					title: "Itinerarios",
 					url: "/dashboard/itinerarios",
 				},
-	
+
 			]
 		},
-		{	title: "Control de flota",
+		{
+			title: "Control de flota",
 			url: "#",
 			icon: MonitorCog,
 			isActive: false,
@@ -180,7 +197,7 @@ const data = {
 					title: "Crear itinerario",
 					url: "/dashboard/crear_itinerario",
 				},
-	
+
 				{
 					title: "Editar itinerario",
 					url: "/dashboard/editar_itinerario",
@@ -203,42 +220,40 @@ const data = {
 			]
 		}
 	],
-
 }
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 	const [role, setRole] = React.useState<string | null>(null);
-  
+
 	React.useEffect(() => {
-	  const r = localStorage.getItem("userRole");
-	  setRole(r);
+		const r = localStorage.getItem("userRole");
+		setRole(r);
 	}, []);
-  
+
 	const filteredNavMain = React.useMemo(() => {
-	  if (!role) return [];
-	  const permissions = rolePermissions[role] || {};
-  
-	  return data.navMain
-		.filter(section => permissions[section.title])
-		.map(section => ({
-		  ...section,
-		  items: section.items.filter(item => permissions[section.title].includes(item.title))
-		}));
+		if (!role) return [];
+		const permissions = rolePermissions[role] || {};
+
+		return data.navMain
+			.filter(section => permissions[section.title])
+			.map(section => ({
+				...section,
+				items: section.items.filter(item => permissions[section.title].includes(item.title))
+			}));
 	}, [role]);
-  
+
 	return (
-	  <Sidebar collapsible="icon" {...props}>
-		<SidebarHeader>
-		  <TeamSwitcher />
-		</SidebarHeader>
-		<SidebarContent>
-		  <NavMain items={filteredNavMain} />
-		</SidebarContent>
-		<SidebarFooter>
-		  <NavUser />
-		</SidebarFooter>
-		<SidebarRail />
-	  </Sidebar>
+		<Sidebar collapsible="icon" {...props}>
+			<SidebarHeader>
+				<TeamSwitcher />
+			</SidebarHeader>
+			<SidebarContent>
+				<NavMain items={filteredNavMain} />
+			</SidebarContent>
+			<SidebarFooter>
+				<NavUser />
+			</SidebarFooter>
+			<SidebarRail />
+		</Sidebar>
 	);
-  }
-  
+}
