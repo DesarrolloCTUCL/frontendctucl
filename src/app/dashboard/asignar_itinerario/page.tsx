@@ -176,25 +176,9 @@ export default function SchedulePage() {
           required
         />
 
-        {/* Select de líneas */}
-        <select
-          name="line_id"
-          value={formData.line_id}
-          onChange={handleChange}
-          className="border p-2 rounded"
-          required
-        >
-          <option value="">Selecciona una línea</option>
-          {lines.map((line) => (
-            <option key={line.id} value={line.number}>
-              {line.number} - {line.name}
-            </option>
-          ))}
-        </select>
-
         {/* Checkboxes de prefijos */}
         <div className="flex gap-4">
-          {["H", "FH", "FD","V"].map(prefix => (
+          {["H", "FH", "FD", "V"].map(prefix => (
             <label key={prefix} className="flex items-center gap-1">
               <input
                 type="checkbox"
@@ -205,6 +189,26 @@ export default function SchedulePage() {
             </label>
           ))}
         </div>
+
+        {/* Select de líneas */}
+        <select
+          name="line_id"
+          value={formData.line_id}
+          onChange={handleChange}
+          className="border p-2 rounded"
+          required
+        >
+          <option value="">Selecciona una línea</option>
+          {[...lines]
+            .sort((a, b) => a.number - b.number)
+            .map((line) => (
+              <option key={line.id} value={line.number}>
+                {line.number} - {line.name}
+              </option>
+            ))}
+        </select>
+
+
 
         {/* Select de itinerarios */}
         <select

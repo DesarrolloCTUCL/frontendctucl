@@ -28,9 +28,10 @@ const rolePermissions: Record<string, { [section: string]: string[] }> = {
 		Administracion: ["Agregar usuario", "Personal"],
 		Usuarios: ["Socios - Buses", "Conductores"],
 		Paradas: ["Automatizadas", "Generales"],
+		Equipos:["Router"],
 		"Puntos de recarga": ["Listado de recargadores", "Mapa de recargadores", "Agregar recargador"],
 		Monitoreo: ["Despacho general", "Despacho por ruta", "Mapa buses", "Itinerarios"],
-		"Control de flota": ["Crear itinerario", "Editar itinerario", "Asignar itinerario", "Franjas Horarias", "Crear-Editar Líneas"]
+		"Control de flota": ["Crear itinerario", "Editar itinerario", "Asignar itinerario","Tiempos de control", "Franjas Horarias", "Crear-Editar Líneas"]
 	},
 	monitoreo: {
 		Monitoreo: ["Despacho general", "Despacho por ruta", "Mapa buses", "Itinerarios"]
@@ -148,7 +149,7 @@ const data = {
 				},
 				{
 					title: "Agregar recargador",
-					url: "/dashboard/pcontrol",
+					url: "/dashboard/agregar_recargador",
 				},
 			],
 		},
@@ -207,6 +208,10 @@ const data = {
 					url: "/dashboard/asignar_itinerario",
 				},
 
+{
+					title: "Tiempos de control",
+					url: "/dashboard/tiempos_control",
+				},
 				{
 					title: "Franjas Horarias",
 					url: "/dashboard/franjas_horarias",

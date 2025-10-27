@@ -59,12 +59,25 @@ export default function MapBusTracker({ deviceId }: MapBusTrackerProps) {
     }
   }
 
+  function formatTimestamp(timestamp?: string) {
+    if (!timestamp) return 'Sin hora'
+    const fixedTimestamp = timestamp.replace('Z', '') // quitar Z para evitar desfase
+    return new Date(fixedTimestamp).toLocaleTimeString('es-EC', {
+      timeZone: 'America/Guayaquil',
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+      hour12: false,
+    })
+  }
+
   // Actualizar cada 30s
   useEffect(() => {
     fetchLastPosition()
-    const interval = setInterval(fetchLastPosition, 30000)
+    const interval = setInterval(fetchLastPosition, 15000)
     return () => clearInterval(interval)
   }, [deviceId])
+
 
   // Actualizar marcador en el mapa
   useEffect(() => {
@@ -72,7 +85,7 @@ export default function MapBusTracker({ deviceId }: MapBusTrackerProps) {
       const { lat, lng, timestamp } = lastPosition
 
       const fixedTimestamp = timestamp ? timestamp.replace('Z', '') : null
-      const formattedTime = fixedTimestamp
+      const formattedTime = formatTimestamp
         ? new Date(fixedTimestamp).toLocaleTimeString('es-EC', {
             timeZone: 'America/Guayaquil',
             hour: '2-digit',
@@ -100,10 +113,13 @@ export default function MapBusTracker({ deviceId }: MapBusTrackerProps) {
     }
   }, [lastPosition])
 
+
+  
   return (
     <div className="flex w-full h-screen">
       {/* Mapa a la izquierda */}
       <div ref={mapContainerRef} className="flex-1 h-full" />
+
 
       {/* Panel info a la derecha */}
       <div className="w-80 bg-white shadow-xl border-l p-4 overflow-y-auto">
@@ -118,7 +134,7 @@ export default function MapBusTracker({ deviceId }: MapBusTrackerProps) {
                 <p><strong>Latitud:</strong> {lastPosition.lat.toFixed(6)}</p>
                 <p><strong>Longitud:</strong> {lastPosition.lng.toFixed(6)}</p>
                 <p><strong>Velocidad:</strong> {lastPosition.speed ?? 0} km/h</p>
-                <p><strong>Hora:</strong> {new Date(lastPosition.timestamp!).toLocaleString('es-EC')}</p>
+                <p><strong>Hora:</strong> {formatTimestamp(lastPosition.timestamp)}</p>
               </>
             ) : (
               <p className="text-gray-500">Cargando datos...</p>

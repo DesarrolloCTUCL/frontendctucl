@@ -1,11 +1,11 @@
 'use client'
-
 import { useEffect, useState } from 'react'
 import { ColumnDef } from '@tanstack/react-table'
 import { fetchFromBackend } from '@/lib/api_backend'
 import { DataTable } from '@/components/mqtt-table'
 import { TableFilters } from '@/components/search'
 import { useRouter } from 'next/navigation'
+
 
 type Dispatch = {
     id: number
@@ -28,11 +28,11 @@ const columns: ColumnDef<Dispatch>[] = [
         accessorKey: 'date',
         header: 'Fecha',
         cell: ({ row }) => {
-          const isoDate = row.original.date // "2025-07-22T00:00:00.000Z"
-          const fecha = isoDate.slice(0, 10).split('-').reverse().join('/')
-          return fecha // "22/07/2025"
+            const isoDate = row.original.date
+            const fecha = isoDate.slice(0, 10).split('-').reverse().join('/')
+            return fecha
         },
-      },
+    },
     { accessorKey: 'observations', header: 'Observaciones' },
     { accessorKey: 'driver', header: 'Conductor' },
     {
@@ -58,6 +58,10 @@ export default function SchedulePage() {
     const [loading, setLoading] = useState(false)
     const router = useRouter()
 
+    useEffect(() => {
+        document.title = 'Despacho General'
+      }, [])
+
     const fetchByDate = async (date: string) => {
         try {
             setLoading(true)
@@ -71,6 +75,15 @@ export default function SchedulePage() {
         }
     }
 
+    // 🔸 Al montar el componente: obtener fecha actual y cargar datos automáticamente
+    useEffect(() => {
+        const today = new Date()
+        const formatted = today.toISOString().split('T')[0] // YYYY-MM-DD
+        setFilters((prev) => ({ ...prev, date: formatted }))
+        fetchByDate(formatted)
+    }, [])
+
+    // 🔸 Si cambia el filtro de fecha (por el calendario), vuelve a cargar
     useEffect(() => {
         if (filters.date) {
             fetchByDate(filters.date)
@@ -80,9 +93,14 @@ export default function SchedulePage() {
     const handleRowDoubleClick = (row: Dispatch) => {
         const itinerary = encodeURIComponent(row.itinerary)
         const vehicle = encodeURIComponent(row.vehicle_id.toString())
-        const date = encodeURIComponent(row.date.split('T')[0]) // Asegura formato YYYY-MM-DD
-        router.push(`/dashboard/despacho_general/papeleta_control?itinerary=${itinerary}&vehicle_id=${vehicle}&date=${date}`)
+        const date = encodeURIComponent(row.date.split('T')[0])
+    
+        const url = `/dashboard/despacho_general/papeleta_control?itinerary=${itinerary}&vehicle_id=${vehicle}&date=${date}`
+    
+        // 🔸 Abre en una nueva pestaña sin perder la anterior
+        window.open(url, '_blank')
     }
+    
 
     const handleSetFilters = (key: string, value: string) => {
         setFilters((prev) => ({ ...prev, [key]: value }))
