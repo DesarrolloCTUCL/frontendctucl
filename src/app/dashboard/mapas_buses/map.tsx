@@ -49,8 +49,8 @@ export default function MapBusTracker({ deviceId }: MapBusTrackerProps) {
       const url = `https://ctucloja.com/api/trackgps/last?device_id=${deviceId}`
       const res = await fetch(url)
       const json = await res.json()
-      if (json.status === 'success' && json.data.data) {
-        setLastPosition(json.data.data)
+      if (json.status === 'success' && json.data) {
+        setLastPosition(json.data)
       } else {
         console.warn('No se encontró posición para el bus.')
       }

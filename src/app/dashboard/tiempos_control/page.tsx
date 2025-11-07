@@ -42,13 +42,17 @@ export default function ShiftPage() {
     }, [])
 
     // 🔹 Cargar puntos de control
+    // 🔹 Cargar puntos de control
     useEffect(() => {
         fetch('https://ctucloja.com/api/bus-station/control-points')
             .then((res) => res.json())
-            .then((json) => json.status === 'success' && json.data?.data && setControlPoints(json.data.data))
+            .then((json) => {
+                if (json.status === 'success' && Array.isArray(json.data)) {
+                    setControlPoints(json.data)   // ✅ AQUÍ EL ARREGLO
+                }
+            })
             .catch(console.error)
     }, [])
-
     // 🔹 Agrupar turnos por grupo (L1, L2, etc.)
     const groupedShifts = useMemo(() => {
         const groups: Record<string, Shift[]> = {}
@@ -143,8 +147,8 @@ export default function ShiftPage() {
                             setTotalTime('')
                         }}
                         className={`px-3 py-1 rounded-lg text-sm font-semibold border ${selectedGroup === groupKey
-                                ? 'bg-blue-600 text-white border-blue-600'
-                                : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-100'
+                            ? 'bg-blue-600 text-white border-blue-600'
+                            : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-100'
                             }`}
                     >
                         {groupKey}
@@ -160,8 +164,8 @@ export default function ShiftPage() {
                             key={shift.id}
                             onClick={() => setSelectedShift(shift)}
                             className={`px-3 py-1 rounded-lg text-sm font-medium border ${selectedShift?.id === shift.id
-                                    ? 'bg-green-600 text-white border-green-600'
-                                    : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-100'
+                                ? 'bg-green-600 text-white border-green-600'
+                                : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-100'
                                 }`}
                         >
                             {shift.shiftcode}

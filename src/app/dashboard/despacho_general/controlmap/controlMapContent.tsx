@@ -88,8 +88,8 @@ export default function ControlMapContent() {
       try {
         const res = await fetch('https://ctucloja.com/api/bus-station/control-points')
         const data = await res.json()
-        if (data.status === 'success') {
-          setControlPoints(data.data.data)
+        if (data.status === 'success' && Array.isArray(data.data)) {
+          setControlPoints(data.data)
         }
       } catch (err) {
         console.error('Error consultando puntos de control:', err)
